@@ -7,6 +7,8 @@ import Sessions from "./pages/Sessions";
 import Activity from "./pages/Activity";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import PremiumPlan from "./pages/PremiumPlan";
+import PaymentPage from "./pages/PaymentPage"; 
 
 export default function App() {
   return (
@@ -31,6 +33,8 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/premium-plan" element={<PremiumPlan />} />
+        <Route path="/payment" element={<PaymentPage />} />
         <Route
           path="/gyms"
           element={

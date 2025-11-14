@@ -1,6 +1,10 @@
 import React from "react";
 
 export default function SubscriptionPackages() {
+  const goToPremium = () => {
+    window.location.href = "/premium-plan";
+  };
+
   return (
     <div
       style={{
@@ -12,7 +16,7 @@ export default function SubscriptionPackages() {
         fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== HERO (same style family as other pages) ===== */}
+      {/* ===== HERO ===== */}
       <div
         style={{
           width: "100%",
@@ -21,7 +25,6 @@ export default function SubscriptionPackages() {
           position: "relative",
         }}
       >
-        {/* Dark curved block */}
         <div
           style={{
             position: "absolute",
@@ -34,7 +37,6 @@ export default function SubscriptionPackages() {
           }}
         />
 
-        {/* Title */}
         <div
           style={{
             position: "absolute",
@@ -51,7 +53,6 @@ export default function SubscriptionPackages() {
           Packages
         </div>
 
-        {/* Subtitle */}
         <div
           style={{
             position: "absolute",
@@ -67,7 +68,6 @@ export default function SubscriptionPackages() {
           training style and schedule.
         </div>
 
-        {/* Icon box top-right */}
         <div
           style={{
             position: "absolute",
@@ -94,8 +94,9 @@ export default function SubscriptionPackages() {
           padding: "28px 20px 40px",
         }}
       >
-        {/* PREMIUM CARD */}
+        {/* PREMIUM CARD (CLICKABLE) */}
         <div
+          onClick={goToPremium}
           style={{
             background: "#C1E973",
             borderRadius: 20,
@@ -103,9 +104,9 @@ export default function SubscriptionPackages() {
             boxShadow: "0 8px 18px rgba(0,0,0,0.18)",
             marginBottom: 24,
             position: "relative",
+            cursor: "pointer",
           }}
         >
-          {/* small outlined square (like a checkbox) */}
           <div
             style={{
               position: "absolute",
@@ -123,7 +124,7 @@ export default function SubscriptionPackages() {
               fontSize: 26,
               fontWeight: 700,
               color: "#42554F",
-              marginBottom: 8,
+              marginBottom: 4,
             }}
           >
             Premium
@@ -131,7 +132,18 @@ export default function SubscriptionPackages() {
 
           <div
             style={{
-              fontSize: 15,
+              fontSize: 16,
+              fontWeight: 500,
+              color: "#000",
+              marginBottom: 12,
+            }}
+          >
+            49.99$/month
+          </div>
+
+          <div
+            style={{
+              fontSize: 14,
               color: "#263B06",
               marginBottom: 18,
             }}
@@ -141,43 +153,11 @@ export default function SubscriptionPackages() {
 
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
+              fontSize: 11,
+              color: "#42554F",
             }}
           >
-            <div>
-              <div
-                style={{
-                  fontSize: 26,
-                  fontWeight: 500,
-                  color: "#000000",
-                }}
-              >
-                49.99$
-              </div>
-              <div
-                style={{
-                  fontSize: 16,
-                  color: "#000000",
-                }}
-              >
-                /month
-              </div>
-            </div>
-
-            <div
-              style={{
-                fontSize: 12,
-                color: "#42554F",
-                textAlign: "right",
-                maxWidth: 140,
-              }}
-            >
-              Best for heavy lifters and
-              <br />
-              frequent gym users.
-            </div>
+            Tap to see full details and buy.
           </div>
         </div>
 
@@ -191,7 +171,6 @@ export default function SubscriptionPackages() {
             position: "relative",
           }}
         >
-          {/* small outlined square (like a checkbox) */}
           <div
             style={{
               position: "absolute",
@@ -209,7 +188,7 @@ export default function SubscriptionPackages() {
               fontSize: 26,
               fontWeight: 700,
               color: "#42554F",
-              marginBottom: 8,
+              marginBottom: 4,
             }}
           >
             Basic
@@ -217,8 +196,19 @@ export default function SubscriptionPackages() {
 
           <div
             style={{
-              fontSize: 15,
-              color: "#000000",
+              fontSize: 16,
+              fontWeight: 500,
+              color: "#000",
+              marginBottom: 8,
+            }}
+          >
+            29.99$/month
+          </div>
+
+          <div
+            style={{
+              fontSize: 14,
+              color: "#000",
               marginBottom: 16,
             }}
           >
@@ -229,46 +219,15 @@ export default function SubscriptionPackages() {
 
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-end",
+              fontSize: 11,
+              color: "#42554F",
             }}
           >
-            <div>
-              <div
-                style={{
-                  fontSize: 26,
-                  fontWeight: 500,
-                  color: "#000000",
-                }}
-              >
-                29.99$
-              </div>
-              <div
-                style={{
-                  fontSize: 16,
-                  color: "#000000",
-                }}
-              >
-                /month
-              </div>
-            </div>
-
-            <div
-              style={{
-                fontSize: 12,
-                color: "#42554F",
-                textAlign: "right",
-                maxWidth: 140,
-              }}
-            >
-              Perfect if you’re getting
-              <br />
-              started or training casually.
-            </div>
+            Great if you’re starting out or training casually.
           </div>
         </div>
       </div>
     </div>
   );
 }
+
