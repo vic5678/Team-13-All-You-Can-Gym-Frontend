@@ -6,6 +6,7 @@ import Gyms from "./pages/Gyms";
 import Sessions from "./pages/Sessions";
 import Activity from "./pages/Activity";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -14,6 +15,14 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/packages" replace />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        /> 
         <Route
           path="/packages"
           element={
