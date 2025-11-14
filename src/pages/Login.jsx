@@ -233,38 +233,44 @@ export default function Login() {
           overflow: "hidden",
         }}
       >
-        <div
-          style={{
-            width: 17.85,
-            height: 16.75,
-            left: 12.49,
-            top: 8.38,
-            position: "absolute",
-            outline: "4px #42554F solid",
-            outlineOffset: "-2px",
-          }}
-        />
+        
       </div>
       <div
-        style={{
-          width: 264,
-          height: 34,
-          left: 72,
-          top: 777,
-          position: "absolute",
-          textAlign: "center",
-          justifyContent: "center",
-          display: "flex",
-          flexDirection: "column",
-          color: "#42554F",
-          fontSize: 25,
-          fontFamily: "Roboto",
-          fontWeight: 500,
-          wordWrap: "break-word",
-        }}
-      >
-        Are you a gym admin?
-      </div>
+  style={{
+    width: 264,
+    height: 34,
+    left: 72,
+    top: 777,
+    position: "absolute",
+    textAlign: "center",
+    justifyContent: "center",
+    display: "flex",
+    flexDirection: "column",
+    color: "#42554F",
+    fontSize: 25,
+    fontFamily: "Roboto",
+    fontWeight: 500,
+  }}
+>
+  Are you a gym admin?
+</div>
+
+{/* CLICKABLE SQUARE BOX */}
+<button
+  onClick={() => (window.location.href = "/AdminHome")}
+  style={{
+    width: 35,
+    height: 35,
+    left: 184,
+    top: 822,
+    position: "absolute",
+    background: "transparent",
+    border: "4px solid #42554F",
+    outlineOffset: "-2px",
+    cursor: "pointer",
+  }}
+>
+</button>
 
       {/* Top hero section */}
       <div

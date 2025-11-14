@@ -275,7 +275,7 @@ export default function Dashboard() {
               }}
             >
               <img
-                src=".../Img_for_dashboard.png"
+                src="/Img_for_dashboard.png"
                 alt="Gym"
                 style={{
                   width: "100%",
