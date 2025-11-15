@@ -1,12 +1,12 @@
 import React from "react";
 
-export default function PremiumPlan() {
+export default function BasicPlan() {
   const goBack = () => {
     window.location.href = "/packages"; // or "/packages", whatever your route is
   };
 
   const handleBuy = () => {
-  window.location.href = "/payment?plan=premium";
+  window.location.href = "/payment?plan=basic";
   };
 
 
@@ -52,7 +52,7 @@ export default function PremiumPlan() {
               marginBottom: 10,
             }}
           >
-            Premium Plan
+            Basic Plan
           </div>
           <div
             style={{
@@ -61,7 +61,7 @@ export default function PremiumPlan() {
               color: "#FFFFFF",
             }}
           >
-            49.99$/month
+            29.99$/month
           </div>
         </div>
 
@@ -177,7 +177,7 @@ export default function PremiumPlan() {
           </div>
         </div>
 
-        {/* Unlimited Gyms */}
+        {/* 3 Gyms */}
         <div style={{ marginBottom: 20 }}>
           <div
             style={{
@@ -209,7 +209,7 @@ export default function PremiumPlan() {
                 color: "#42554F",
               }}
             >
-              Unlimited Gyms
+              Three Gyms
             </div>
           </div>
           <div
@@ -219,8 +219,7 @@ export default function PremiumPlan() {
               lineHeight: "18px",
             }}
           >
-            Access any partner gym with no restrictions – train wherever suits
-            you best.
+            Access to three gyms - choose from our long list of partner locations.
           </div>
         </div>
 
@@ -256,7 +255,7 @@ export default function PremiumPlan() {
                 color: "#42554F",
               }}
             >
-              Unlimited Sessions
+              Three Sessions per week
             </div>
           </div>
           <div
@@ -266,7 +265,7 @@ export default function PremiumPlan() {
               lineHeight: "18px",
             }}
           >
-            Book as many workout sessions as you like, with complete flexibility.
+            Book up to three sessions per week at any gym partner you chose.
           </div>
         </div>
 

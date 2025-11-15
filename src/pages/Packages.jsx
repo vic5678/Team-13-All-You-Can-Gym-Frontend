@@ -4,6 +4,13 @@ export default function SubscriptionPackages() {
   const goToPremium = () => {
     window.location.href = "/premium-plan";
   };
+  const goToBasic = () => {
+    window.location.href = "/basic-plan";
+  };
+  const goBack = () => {
+    // adjust this to wherever you want to go back (dashboard, /, etc.)
+    window.location.href = "/Dashboard";
+  };
 
   return (
     <div
@@ -41,7 +48,7 @@ export default function SubscriptionPackages() {
           style={{
             position: "absolute",
             left: 24,
-            bottom: 95,
+            bottom: 85,
             color: "#FFFFFF",
             fontSize: 26,
             fontWeight: 700,
@@ -91,9 +98,71 @@ export default function SubscriptionPackages() {
       {/* ===== MAIN CONTENT ===== */}
       <div
         style={{
-          padding: "28px 20px 40px",
+          padding: "20px 20px 40px",
         }}
       >
+        {/* top row: back arrow and menu icon */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 18,
+          }}
+        >
+          <button
+            type="button"
+            onClick={goBack}
+            style={{
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: 26,
+              color: "#42554F",
+            }}
+          >
+            ←
+          </button>
+
+          <div
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: 50,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-around",
+              alignItems: "center",
+              padding: "4px 0",
+            }}
+          >
+            <span
+              style={{
+                width: 20,
+                height: 3,
+                background: "#42554F",
+                borderRadius: 2,
+              }}
+            />
+            <span
+              style={{
+                width: 20,
+                height: 3,
+                background: "#42554F",
+                borderRadius: 2,
+              }}
+            />
+            <span
+              style={{
+                width: 20,
+                height: 3,
+                background: "#42554F",
+                borderRadius: 2,
+              }}
+            />
+          </div>
+        </div>
+
         {/* PREMIUM CARD (CLICKABLE) */}
         <div
           onClick={goToPremium}
@@ -161,14 +230,16 @@ export default function SubscriptionPackages() {
           </div>
         </div>
 
-        {/* BASIC CARD */}
+        {/* BASIC CARD (NOW CLICKABLE TOO) */}
         <div
+          onClick={goToBasic}
           style={{
             background: "#D4D3D0",
             borderRadius: 20,
             padding: "22px 20px 18px",
             boxShadow: "0 6px 14px rgba(0,0,0,0.1)",
             position: "relative",
+            cursor: "pointer",
           }}
         >
           <div
@@ -230,4 +301,5 @@ export default function SubscriptionPackages() {
     </div>
   );
 }
+
 
