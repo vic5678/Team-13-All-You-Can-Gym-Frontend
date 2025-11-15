@@ -14,6 +14,7 @@ import EditSession1 from "./pages/EditSession1";
 import EditSession2 from "./pages/EditSession2";
 import CreateSession from "./pages/CreateSession";
 import BasicPlan from "./pages/BasicPlan";
+import AdminSessions from "./pages/AdminSessions";
 
 export default function App() {
   return (
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/AdminHome" element={<AdminHome />} />
         <Route path="/admin/edit-session" element={<EditSession1 />} />
+        <Route path="/admin/sessions" element={<AdminSessions />} />
         <Route path="/admin/edit-session2" element={<EditSession2 />} />
         <Route path="/admin/create-session" element={<CreateSession />} />
         <Route
