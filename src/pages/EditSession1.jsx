@@ -1,18 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function EditSession() {
+export default function EditSession1() {
+  const [sessionId, setSessionId] = useState("");
+  const [error, setError] = useState("");
+
   const goBack = () => {
     window.location.href = "/AdminHome";
-  };
-
-  const handleContinue = (e) => {
-    e.preventDefault();
-    alert("Continue with this Session ID (demo).");
   };
 
   const handleViewSessions = () => {
     window.location.href = "/admin/sessions";
   };
+  /*
+  const handleContinue = (e) => {
+    e.preventDefault();
+
+    if (!sessionId.trim()) {
+      setError("Session ID is required");
+      return;
+    }
+  
+
+
+    // clear error if there was one
+    setError("");
+
+    // go to the edit page (you can read the id from query string in edit-session2)
+    window.location.href = `/edit-session2?sessionId=${encodeURIComponent(
+      sessionId.trim()
+    )}`;
+  };
+  */
+  const handleContinue = (e) => {
+  e.preventDefault();
+  if (!sessionId.trim()) {
+      setError("Session ID is required");
+      return;
+    }
+    setError("");
+  window.location.href = "/admin/edit-session2"; // no ID needed anymore
+};
 
   return (
     <div
@@ -185,6 +212,11 @@ export default function EditSession() {
           <input
             type="text"
             placeholder="Enter session ID"
+            value={sessionId}
+            onChange={(e) => {
+              setSessionId(e.target.value);
+              if (error) setError("");
+            }}
             style={{
               width: "100%",
               padding: "10px 36px 10px 10px",
@@ -194,7 +226,12 @@ export default function EditSession() {
               outline: "none",
             }}
           />
+          {/* clear icon */}
           <span
+            onClick={() => {
+              setSessionId("");
+              setError("");
+            }}
             style={{
               position: "absolute",
               right: 10,
@@ -207,6 +244,19 @@ export default function EditSession() {
             ⓧ
           </span>
         </div>
+
+        {/* error message */}
+        {error && (
+          <div
+            style={{
+              fontSize: 11,
+              color: "crimson",
+              marginBottom: 10,
+            }}
+          >
+            {error}
+          </div>
+        )}
 
         <div
           style={{

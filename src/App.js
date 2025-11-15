@@ -10,7 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import PremiumPlan from "./pages/PremiumPlan";
 import PaymentPage from "./pages/PaymentPage"; 
 import AdminHome from "./pages/AdminHome";
-import EditSession from "./pages/EditSession";
+import EditSession1 from "./pages/EditSession1";
+import EditSession2 from "./pages/EditSession2";
 import CreateSession from "./pages/CreateSession";
 import BasicPlan from "./pages/BasicPlan";
 
@@ -42,7 +43,8 @@ export default function App() {
         <Route path="/basic-plan" element={<BasicPlan />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/AdminHome" element={<AdminHome />} />
-        <Route path="/admin/edit-session" element={<EditSession />} />
+        <Route path="/admin/edit-session" element={<EditSession1 />} />
+        <Route path="/admin/edit-session2" element={<EditSession2 />} />
         <Route path="/admin/create-session" element={<CreateSession />} />
         <Route
           path="/gyms"
