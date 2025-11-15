@@ -3,9 +3,9 @@ import api from "./axios";
 export function getAllSessions(){
   return api.get("/sessions");
 }
-export function createSession(payload) {
+export const createSession = (payload) => {
   return api.post("/sessions", payload);
-}
+};
 export function updateSession(sessionId, payload) {
   return api.put(`/sessions/${sessionId}`, payload);
 }
