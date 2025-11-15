@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 export default function CreateSession() {
   const [form, setForm] = useState({
@@ -10,8 +10,10 @@ export default function CreateSession() {
     trainer: "",
   });
 
+  const dateTimeRef = useRef(null); // <-- ref for the datetime input
+
   const goBack = () => {
-    window.location.href = "/admin"; // back to admin home
+    window.location.href = "/AdminHome"; // back to admin home
   };
 
   const handleChange = (e) => {
@@ -21,7 +23,6 @@ export default function CreateSession() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    // demo behaviour – replace with API call later
     console.log("Create session:", form);
     alert("Session saved (demo).");
   };
@@ -177,56 +178,230 @@ export default function CreateSession() {
           Enter Session details
         </div>
 
-        {/* helper to reuse styles */}
-        {[
-          { label: "Name", name: "name", placeholder: "Name" },
-          { label: "Date & Time", name: "dateTime", placeholder: "Date & Time", isDate: true },
-          { label: "Description", name: "description", placeholder: "Description" },
-          { label: "Type", name: "type", placeholder: "Type" },
-          { label: "Capacity", name: "capacity", placeholder: "Capacity" },
-          { label: "Trainer's Name", name: "trainer", placeholder: "Trainer's Name" },
-        ].map((field, idx) => (
-          <div key={field.name} style={{ marginBottom: idx === 5 ? 26 : 14 }}>
-            <div
+        {/* NAME */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Name
+          </div>
+          <div style={{ position: "relative" }}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={form.name}
+              onChange={handleChange}
               style={{
-                fontSize: 11,
+                width: "100%",
+                padding: "10px 36px 10px 10px",
+                borderRadius: 8,
+                border: "1px solid #42554F",
+                fontSize: 13,
+                outline: "none",
+                background: "#FFFFFF",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 9,
+                fontSize: 16,
                 color: "#999",
-                marginBottom: 3,
               }}
             >
-              {field.label}
-            </div>
-            <div style={{ position: "relative" }}>
-              <input
-                type="text"
-                name={field.name}
-                placeholder={field.placeholder}
-                value={form[field.name]}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "10px 36px 10px 10px",
-                  borderRadius: 8,
-                  border: "1px solid #42554F",
-                  fontSize: 13,
-                  outline: "none",
-                  background: "#FFFFFF",
-                }}
-              />
-              <span
-                style={{
-                  position: "absolute",
-                  right: 10,
-                  top: 9,
-                  fontSize: 16,
-                  color: "#999",
-                }}
-              >
-                {field.isDate ? "📅" : "ⓧ"}
-              </span>
-            </div>
+              ⓧ
+            </span>
           </div>
-        ))}
+        </div>
+
+        {/* DATE & TIME with real picker */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Date &amp; Time
+          </div>
+          <div style={{ position: "relative" }}>
+            <input
+              ref={dateTimeRef}
+              type="datetime-local"
+              name="dateTime"
+              value={form.dateTime}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "10px 36px 10px 10px",
+                borderRadius: 8,
+                border: "1px solid #42554F",
+                fontSize: 13,
+                outline: "none",
+                background: "#FFFFFF",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (dateTimeRef.current) dateTimeRef.current.showPicker?.();
+                // showPicker is supported in modern Chromium; fallback:
+                if (dateTimeRef.current) dateTimeRef.current.focus();
+              }}
+              style={{
+                position: "absolute",
+                right: 6,
+                top: 5,
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                fontSize: 18,
+              }}
+            >
+              📅
+            </button>
+          </div>
+        </div>
+
+        {/* DESCRIPTION */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Description
+          </div>
+          <div style={{ position: "relative" }}>
+            <input
+              type="text"
+              name="description"
+              placeholder="Description"
+              value={form.description}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "10px 36px 10px 10px",
+                borderRadius: 8,
+                border: "1px solid #42554F",
+                fontSize: 13,
+                outline: "none",
+                background: "#FFFFFF",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 9,
+                fontSize: 16,
+                color: "#999",
+              }}
+            >
+              ⓧ
+            </span>
+          </div>
+        </div>
+
+        {/* TYPE */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>Type</div>
+          <div style={{ position: "relative" }}>
+            <input
+              type="text"
+              name="type"
+              placeholder="Type"
+              value={form.type}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "10px 36px 10px 10px",
+                borderRadius: 8,
+                border: "1px solid #42554F",
+                fontSize: 13,
+                outline: "none",
+                background: "#FFFFFF",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 9,
+                fontSize: 16,
+                color: "#999",
+              }}
+            >
+              ⓧ
+            </span>
+          </div>
+        </div>
+
+        {/* CAPACITY */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Capacity
+          </div>
+          <div style={{ position: "relative" }}>
+            <input
+              type="number"
+              name="capacity"
+              placeholder="Capacity"
+              value={form.capacity}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "10px 36px 10px 10px",
+                borderRadius: 8,
+                border: "1px solid #42554F",
+                fontSize: 13,
+                outline: "none",
+                background: "#FFFFFF",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 9,
+                fontSize: 16,
+                color: "#999",
+              }}
+            >
+              ⓧ
+            </span>
+          </div>
+        </div>
+
+        {/* TRAINER */}
+        <div style={{ marginBottom: 26 }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Trainer&apos;s Name
+          </div>
+          <div style={{ position: "relative" }}>
+            <input
+              type="text"
+              name="trainer"
+              placeholder="Trainer's Name"
+              value={form.trainer}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "10px 36px 10px 10px",
+                borderRadius: 8,
+                border: "1px solid #42554F",
+                fontSize: 13,
+                outline: "none",
+                background: "#FFFFFF",
+              }}
+            />
+            <span
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 9,
+                fontSize: 16,
+                color: "#999",
+              }}
+            >
+              ⓧ
+            </span>
+          </div>
+        </div>
 
         {/* SAVE BUTTON */}
         <button

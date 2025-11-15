@@ -12,14 +12,14 @@ import PaymentPage from "./pages/PaymentPage";
 import AdminHome from "./pages/AdminHome";
 import EditSession from "./pages/EditSession";
 import CreateSession from "./pages/CreateSession";
+import BasicPlan from "./pages/BasicPlan";
 
 export default function App() {
   return (
     <div>
       <NavBar />
       <Routes>
-        <Route path="/" element={<Navigate to="/packages" replace />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/Login" replace />} />
         <Route
           path="/dashboard"
           element={
@@ -28,8 +28,10 @@ export default function App() {
             </ProtectedRoute>
           }
         /> 
+        {/* LOGIN MUST NOT BE PROTECTED */}
+        <Route path="/login" element={<Login />} />
         <Route
-          path="/packages"
+          path="/Packages"
           element={
             <ProtectedRoute>
               <Packages />
@@ -37,6 +39,7 @@ export default function App() {
           }
         />
         <Route path="/premium-plan" element={<PremiumPlan />} />
+        <Route path="/basic-plan" element={<BasicPlan />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/AdminHome" element={<AdminHome />} />
         <Route path="/admin/edit-session" element={<EditSession />} />

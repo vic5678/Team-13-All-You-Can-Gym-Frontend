@@ -1,9 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Dashboard() {
+  const { logout } = useAuth();
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
   const handleSubscribe = () => {
     window.location.href = "/packages";
   };
+
+  const handleProfile = () => {
+    // change "/profile" to whatever route you use for profile
+    window.location.href = "/profile";
+  };
+
+  // Dashboard.jsx
+const handleLogout = async () => {
+  if (logout) {
+    await logout();
+  }
+  window.location.href = "/";  // go back to the login route you already have
+};
+
 
   return (
     <div
@@ -95,6 +113,7 @@ export default function Dashboard() {
             alignItems: "center",
           }}
         >
+          {/* map icon */}
           <div
             style={{
               width: 34,
@@ -110,7 +129,11 @@ export default function Dashboard() {
           >
             📍
           </div>
-          <div
+
+          {/* user icon as BUTTON */}
+          <button
+            type="button"
+            onClick={() => setShowUserMenu((v) => !v)}
             style={{
               width: 34,
               height: 34,
@@ -121,18 +144,78 @@ export default function Dashboard() {
               justifyContent: "center",
               fontSize: 20,
               color: "#C1E973",
+              border: "none",
+              cursor: "pointer",
             }}
           >
             👤
-          </div>
+          </button>
         </div>
+
+        {/* USER POPUP MENU */}
+        {showUserMenu && (
+          <div
+            style={{
+              position: "absolute",
+              right: 16,
+              top: 150,
+              width: 170,
+              background: "#FFFFFF",
+              borderRadius: 12,
+              boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
+              padding: "10px 0",
+              zIndex: 10,
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleProfile}
+              style={{
+                width: "100%",
+                padding: "8px 14px",
+                textAlign: "left",
+                background: "transparent",
+                border: "none",
+                fontSize: 14,
+                color: "#42554F",
+                cursor: "pointer",
+              }}
+            >
+              My profile
+            </button>
+            <div
+              style={{
+                height: 1,
+                background: "#E5E5E5",
+                margin: "4px 0",
+              }}
+            />
+            <button
+              type="button"
+              onClick={handleLogout}
+              style={{
+                width: "100%",
+                padding: "8px 14px",
+                textAlign: "left",
+                background: "transparent",
+                border: "none",
+                fontSize: 14,
+                color: "#C0392B",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
+              Log out
+            </button>
+          </div>
+        )}
       </div>
 
-            {/* ===== MAIN CONTENT ===== */}
+      {/* ===== MAIN CONTENT ===== */}
       <div
         style={{
           position: "relative",
-          padding: "40px 24px 60px", // increased padding
+          padding: "40px 24px 60px",
           background:
             "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
         }}
@@ -141,9 +224,9 @@ export default function Dashboard() {
         <div
           style={{
             display: "flex",
-            gap: 20,               // wider spacing
+            gap: 20,
             marginTop: 20,
-            marginBottom: 50,      // more space before the button
+            marginBottom: 50,
           }}
         >
           {/* left column: three features */}
@@ -152,7 +235,7 @@ export default function Dashboard() {
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              gap: 30,             // bigger gaps between features
+              gap: 30,
             }}
           >
             {/* feature 1 */}
@@ -183,7 +266,13 @@ export default function Dashboard() {
                 >
                   Search Gym Partners
                 </div>
-                <div style={{ fontSize: 12, lineHeight: "15px", color: "#4F4F4F" }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "15px",
+                    color: "#4F4F4F",
+                  }}
+                >
                   Filter by location, ratings, or equipment.
                 </div>
               </div>
@@ -217,7 +306,13 @@ export default function Dashboard() {
                 >
                   View on map
                 </div>
-                <div style={{ fontSize: 12, lineHeight: "15px", color: "#4F4F4F" }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "15px",
+                    color: "#4F4F4F",
+                  }}
+                >
                   Discover gyms near you in real-time.
                 </div>
               </div>
@@ -251,7 +346,13 @@ export default function Dashboard() {
                 >
                   Ratings
                 </div>
-                <div style={{ fontSize: 12, lineHeight: "15px", color: "#4F4F4F" }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "15px",
+                    color: "#4F4F4F",
+                  }}
+                >
                   See what others say about us.
                 </div>
               </div>
@@ -261,8 +362,8 @@ export default function Dashboard() {
           {/* right side: circular photo */}
           <div
             style={{
-              flex: "0 0 150px",     // slightly bigger
-              marginTop: 30,         // lower the image
+              flex: "0 0 150px",
+              marginTop: 30,
             }}
           >
             <div
@@ -275,7 +376,7 @@ export default function Dashboard() {
               }}
             >
               <img
-                src="/Img_for_dashboard.png"
+                src="/Photos_for_UI/Img_for_dashboard.png"
                 alt="Gym"
                 style={{
                   width: "100%",
@@ -287,11 +388,11 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* SUBSCRIBE BUTTON - moved lower */}
+        {/* SUBSCRIBE BUTTON */}
         <button
           onClick={handleSubscribe}
           style={{
-            marginTop: 80, // pushes it down more
+            marginTop: 80,
             width: "100%",
             padding: "18px 0",
             background: "#B8ED44",

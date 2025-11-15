@@ -1,18 +1,25 @@
 import React from "react";
 
 export default function PaymentPage() {
+  // read ?plan=premium or ?plan=basic from the URL
+  const params = new URLSearchParams(window.location.search);
+  const plan = params.get("plan") || "premium"; // default premium
+
+  const isPremium = plan !== "basic";
+  const itemLabel = isPremium ? "Premium" : "Basic";
+  const totalPrice = isPremium ? "49,99$" : "29,99$";
+
   const goBack = () => {
-    window.location.href = "/premium-plan"; // adjust if your route is different
+    window.location.href = isPremium ? "/premium-plan" : "/basic-plan";
   };
 
   const handleCancel = () => {
-    window.location.href = "/subscriptions"; // or wherever you want to go back
+    window.location.href = "/packages"; // or wherever you like
   };
 
   const handleConfirm = (e) => {
     e.preventDefault();
-    // demo behaviour – replace with real logic later
-    alert("Payment confirmed (demo).");
+    alert(`Payment confirmed for ${itemLabel} (${totalPrice}) – demo.`);
   };
 
   return (
@@ -186,7 +193,7 @@ export default function PaymentPage() {
           }}
         >
           <span>Item:</span>
-          <span style={{ fontWeight: 600 }}>Premium</span>
+          <span style={{ fontWeight: 600 }}>{itemLabel}</span>
         </div>
         <div
           style={{
@@ -198,7 +205,7 @@ export default function PaymentPage() {
           }}
         >
           <span>Total:</span>
-          <span style={{ fontWeight: 600 }}>49,99$</span>
+          <span style={{ fontWeight: 600 }}>{totalPrice}</span>
         </div>
 
         {/* card image */}
@@ -213,7 +220,7 @@ export default function PaymentPage() {
           }}
         >
           <img
-            src="/card_image.jpg" // put your payment image in public/ or change path
+            src="/Photos_for_UI/card.jpg"
             alt="Credit card"
             style={{
               width: "100%",

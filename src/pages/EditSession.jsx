@@ -2,7 +2,7 @@ import React from "react";
 
 export default function EditSession() {
   const goBack = () => {
-    window.location.href = "/admin";
+    window.location.href = "/AdminHome";
   };
 
   const handleContinue = (e) => {

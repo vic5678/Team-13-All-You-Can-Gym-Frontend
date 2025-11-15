@@ -1,6 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function AdminHome() {
+  const { user, logout } = useAuth();
+  const [showProfile, setShowProfile] = useState(false);
+
+  const toggleProfile = () => setShowProfile((prev) => !prev);
+
+  const handleLogout = async () => {
+    if (logout) {
+      await logout();
+    }
+    window.location.href = "/login";
+  };
+  const handleProfile = () => {
+    window.location.href = "/profile";
+  };
   return (
     <div
       style={{
@@ -43,8 +58,10 @@ export default function AdminHome() {
               marginTop: 4,
             }}
           >
-            One App. Every gym<br />
-            Train anywhere, anytime.<br />
+            One App. Every gym
+            <br />
+            Train anywhere, anytime.
+            <br />
             Your way.
           </div>
         </div>
@@ -81,6 +98,7 @@ export default function AdminHome() {
             alignItems: "center",
           }}
         >
+          {/* map icon (static) */}
           <div
             style={{
               width: 34,
@@ -96,7 +114,11 @@ export default function AdminHome() {
           >
             📍
           </div>
-          <div
+
+          {/* user icon (clickable for profile popup) */}
+          <button
+            type="button"
+            onClick={toggleProfile}
             style={{
               width: 34,
               height: 34,
@@ -107,14 +129,75 @@ export default function AdminHome() {
               justifyContent: "center",
               alignItems: "center",
               fontSize: 20,
+              border: "none",
+              cursor: "pointer",
             }}
           >
             👤
-          </div>
+          </button>
         </div>
+
+        {/* PROFILE DROPDOWN */}
+        {showProfile && (
+          <div
+            style={{
+              position: "absolute",
+              right: 16,
+              top: 155,
+              background: "#FFFFFF",
+              borderRadius: 10,
+              boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+              padding: "10px 14px",
+              minWidth: 170,
+              zIndex: 10,
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleProfile}
+              style={{
+                width: "100%",
+                padding: "8px 14px",
+                textAlign: "left",
+                background: "transparent",
+                border: "none",
+                fontSize: 14,
+                color: "#42554F",
+                cursor: "pointer",
+              }}
+            >
+              My profile
+            </button>
+            <div
+              style={{
+                height: 1,
+                background: "#E5E5E5",
+                margin: "4px 0",
+              }}
+            />
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              style={{
+                width: "100%",
+                padding: "8px 14px",
+                textAlign: "left",
+                background: "transparent",
+                border: "none",
+                fontSize: 14,
+                color: "#C0392B",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
+              Log out
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* ===== CONTENT STARTS (No absolute positioning) ===== */}
+      {/* ===== CONTENT STARTS ===== */}
       <div
         style={{
           padding: "30px 30px 20px",
@@ -150,14 +233,16 @@ export default function AdminHome() {
             lineHeight: "20px",
           }}
         >
-          Create a new session for your gym.<br />
-          Add the necessary details.<br />
-          Subscribed users will view it & book it!
+          Create a new session for your gym.
+          <br />
+          Add the necessary details.
+          <br />
+          Subscribed users will view it &amp; book it!
         </p>
 
         {/* Image */}
         <img
-          src="/admin_create_session.jpg"
+          src="/Photos_for_UI/GymAdmin_Session1.png"
           alt="gym"
           style={{
             width: "100%",
@@ -197,14 +282,16 @@ export default function AdminHome() {
             lineHeight: "20px",
           }}
         >
-          Something wrong with your session?<br />
-          Let us know if you want to make any changes.<br />
+          Something wrong with your session?
+          <br />
+          Let us know if you want to make any changes.
+          <br />
           We’ll notify the users who booked it!
         </p>
 
         {/* Image */}
         <img
-          src="/admin_edit_session.jpg"
+          src="/Photos_for_UI/GymAdmin_Session2.png"
           alt="edit session"
           style={{
             width: "100%",

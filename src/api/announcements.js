@@ -10,6 +10,6 @@ export function createAnnouncement(sessionId, payload) {
 export function getUserAnnouncements(userId) {
   return api.get(`/users/${userId}/sessions/announcements`);
 }
-export function getAnnouncement(id) {
+export function getAnnouncementById(id) {
   return api.get(`/announcements/${id}`);
 }
