@@ -119,6 +119,166 @@ export default function Dashboard() {
           >
             {feature.description}
           </div>
+        )}
+      </div>
+
+      {/* ===== MAIN CONTENT ===== */}
+      <div
+        style={{
+          position: "relative",
+          padding: "40px 24px 60px",
+          background:
+            "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
+        }}
+      >
+        {/* features + circular photo */}
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+            marginTop: 20,
+            marginBottom: 50,
+          }}
+        >
+          {/* left column: three features */}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 30,
+            }}
+          >
+            {/* feature 1 */}
+            <button
+              onClick={() => {
+                window.location.href = "/search-gyms";
+              }}
+              style={{
+                display: "flex",
+                gap: 10,
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: "#B8ED44",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                  color: "#263B06",
+                }}
+              >
+                🔍
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "#42554F",
+                    marginBottom: 4,
+                  }}
+                >
+                  Search Gym Partners
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "15px",
+                    color: "#4F4F4F",
+                  }}
+                >
+                  Filter by location, ratings, or equipment.
+                </div>
+              </div>
+            </button>
+
+            {/* feature 2 */}
+            <div style={{ display: "flex", gap: 10 }}>
+              <div
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: "#B8ED44",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                  color: "#263B06",
+                }}
+              >
+                🗺️
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "#42554F",
+                    marginBottom: 4,
+                  }}
+                >
+                  View on map
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "15px",
+                    color: "#4F4F4F",
+                  }}
+                >
+                  Discover gyms near you in real-time.
+                </div>
+              </div>
+            </div>
+
+            {/* feature 3 */}
+            <div style={{ display: "flex", gap: 10 }}>
+              <div
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: "#B8ED44",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 18,
+                  color: "#263B06",
+                }}
+              >
+                👍
+              </div>
+              <div>
+                <div
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "#42554F",
+                    marginBottom: 4,
+                  }}
+                >
+                  Ratings
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    lineHeight: "15px",
+                    color: "#4F4F4F",
+                  }}
+                >
+                  See what others say about us.
+                </div>
+              </div>
             </div>
           </div>
         ))}
