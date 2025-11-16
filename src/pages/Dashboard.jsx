@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getActiveSubscription } from "../api/subscriptions";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import { FaSearch, FaMapMarkedAlt, FaThumbsUp } from "react-icons/fa"; // Updated icons
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Dashboard() {
-  const { logout, userId } = useAuth();
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const { userId } = useAuth();
   const [hasSubscription, setHasSubscription] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     checkSubscription();
@@ -19,222 +23,53 @@ export default function Dashboard() {
   };
 
   const handleSubscribe = () => {
-    window.location.href = "/packages";
+    navigate("/packages");
   };
 
   const handleViewSubscription = () => {
-    window.location.href = "/subscription-management";
+    navigate("/subscription-management");
   };
 
-  const handleProfile = () => {
-    // change "/profile" to whatever route you use for profile
-    window.location.href = "/profile";
-  };
-
-  // Dashboard.jsx
-const handleLogout = async () => {
-  if (logout) {
-    await logout();
-  }
-  window.location.href = "/";  // go back to the login route you already have
-};
-
+  // Define features with icons and navigation paths
+  const features = [
+    {
+      icon: <FaSearch />,
+      title: "Search Gym Partners",
+      description: "Filter by location, ratings, or equipment.",
+      path: "/search-gyms",
+    },
+    {
+      icon: <FaMapMarkedAlt />,
+      title: "View on map",
+      description: "Discover gyms near you in real-time.",
+      path: "/gyms", // Example path
+    },
+    {
+      icon: <FaThumbsUp />,
+      title: "Ratings",
+      description: "See what others say about us.",
+      path: "/ratings", // Example path
+    },
+  ];
 
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
-        position: "relative",
-        background: "#FAFAFA",
         overflow: "hidden",
         margin: "0 auto",
-        fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== TOP HERO ===== */}
-      <div
-        style={{
-          width: "100%",
-          height: 210,
-          background: "#C1E973",
-          position: "relative",
-        }}
-      >
-        {/* dark panel with title + subtitle */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 260,
-            background: "#42554F",
-            padding: "16px 18px",
-            borderTopRightRadius: 32,
-            color: "#FFFFFF",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 22,
-              fontWeight: 700,
-              lineHeight: "28px",
-              marginBottom: 4,
-            }}
-          >
-            All You Can Gym
-          </div>
-          <div
-            style={{
-              fontSize: 11,
-              lineHeight: "15px",
-            }}
-          >
-            One App. Every gym
-            <br />
-            Train anywhere, anytime.
-            <br />
-            Your way.
-          </div>
-        </div>
-
-        {/* top-right big icon background (runner) */}
-        <div
-          style={{
-            position: "absolute",
-            right: 16,
-            top: 16,
-            width: 78,
-            height: 78,
-            borderRadius: 22,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 36,
-            color: "#C1E973",
-          }}
-        >
-          🏃‍♀️
-        </div>
-
-        {/* map + user icons under it */}
-        <div
-          style={{
-            position: "absolute",
-            right: 32,
-            top: 112,
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-            alignItems: "center",
-          }}
-        >
-          {/* map icon */}
-          <div
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: 10,
-              background: "#42554F",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 20,
-              color: "#C1E973",
-            }}
-          >
-            📍
-          </div>
-
-          {/* user icon as BUTTON */}
-          <button
-            type="button"
-            onClick={() => setShowUserMenu((v) => !v)}
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: 10,
-              background: "#42554F",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 20,
-              color: "#C1E973",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            👤
-          </button>
-        </div>
-
-        {/* USER POPUP MENU */}
-        {showUserMenu && (
-          <div
-            style={{
-              position: "absolute",
-              right: 16,
-              top: 150,
-              width: 170,
-              background: "#FFFFFF",
-              borderRadius: 12,
-              boxShadow: "0 6px 18px rgba(0,0,0,0.18)",
-              padding: "10px 0",
-              zIndex: 10,
-            }}
-          >
-            <button
-              type="button"
-              onClick={handleProfile}
-              style={{
-                width: "100%",
-                padding: "8px 14px",
-                textAlign: "left",
-                background: "transparent",
-                border: "none",
-                fontSize: 14,
-                color: "#42554F",
-                cursor: "pointer",
-              }}
-            >
-              My profile
-            </button>
-            <div
-              style={{
-                height: 1,
-                background: "#E5E5E5",
-                margin: "4px 0",
-              }}
-            />
-            <button
-              type="button"
-              onClick={handleLogout}
-              style={{
-                width: "100%",
-                padding: "8px 14px",
-                textAlign: "left",
-                background: "transparent",
-                border: "none",
-                fontSize: 14,
-                color: "#C0392B",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
-              Log out
-            </button>
-          </div>
-        )}
-      </div>
+      <Header
+        title="All You Can Gym"
+        subtitle={<>One App. Every gym<br />Train anywhere, anytime. <br />Your way.</>}
+      />
+      <NavBar />
 
       {/* ===== MAIN CONTENT ===== */}
       <div
         style={{
           position: "relative",
           padding: "40px 24px 60px",
-          background:
-            "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
         }}
       >
         {/* features + circular photo */}
@@ -255,137 +90,61 @@ const handleLogout = async () => {
               gap: 30,
             }}
           >
-            {/* feature 1 */}
-            <button
-              onClick={() => {
-                window.location.href = "/search-gyms";
-              }}
-              style={{
-                display: "flex",
-                gap: 10,
-                background: "none",
-                border: "none",
-                padding: 0,
-                cursor: "pointer",
-              }}
-            >
-              <div
+            {/* Correctly map over features */}
+            {features.map((feature, index) => (
+              <button
+                key={index}
+                onClick={() => navigate(feature.path)}
                 style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  background: "#B8ED44",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 18,
-                  color: "#263B06",
+                  gap: 15,
+                  alignItems: "flex-start",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  textAlign: "left",
                 }}
               >
-                🔍
-              </div>
-              <div style={{ textAlign: "left" }}>
                 <div
                   style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: "#42554F",
-                    marginBottom: 4,
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    background: "var(--global-accent-color-secondary)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 18,
+                    color: "var(--global-accent-color)",
+                    flexShrink: 0,
                   }}
                 >
-                  Search Gym Partners
+                  {feature.icon}
                 </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    lineHeight: "15px",
-                    color: "#4F4F4F",
-                  }}
-                >
-                  Filter by location, ratings, or equipment.
+                <div>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: "var(--global-accent-color)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {feature.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      lineHeight: "15px",
+                      color: "var(--global-text-color-muted)",
+                    }}
+                  >
+                    {feature.description}
+                  </div>
                 </div>
-              </div>
-            </button>
-
-            {/* feature 2 */}
-            <div style={{ display: "flex", gap: 10 }}>
-              <div
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  background: "#B8ED44",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 18,
-                  color: "#263B06",
-                }}
-              >
-                🗺️
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: "#42554F",
-                    marginBottom: 4,
-                  }}
-                >
-                  View on map
-                </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    lineHeight: "15px",
-                    color: "#4F4F4F",
-                  }}
-                >
-                  Discover gyms near you in real-time.
-                </div>
-              </div>
-            </div>
-
-            {/* feature 3 */}
-            <div style={{ display: "flex", gap: 10 }}>
-              <div
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  background: "#B8ED44",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 18,
-                  color: "#263B06",
-                }}
-              >
-                👍
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: "#42554F",
-                    marginBottom: 4,
-                  }}
-                >
-                  Ratings
-                </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    lineHeight: "15px",
-                    color: "#4F4F4F",
-                  }}
-                >
-                  See what others say about us.
-                </div>
-              </div>
-            </div>
+              </button>
+            ))}
           </div>
 
           {/* right side: circular photo */}
@@ -424,14 +183,14 @@ const handleLogout = async () => {
             marginTop: 80,
             width: "100%",
             padding: "18px 0",
-            background: "#B8ED44",
+            background: "var(--global-accent-color-secondary)",
             borderRadius: 999,
             border: "none",
             fontSize: 18,
             fontWeight: 800,
             letterSpacing: 1,
             textTransform: "uppercase",
-            color: "#42554F",
+            color: "var(--global-accent-color)",
             cursor: "pointer",
           }}
         >
