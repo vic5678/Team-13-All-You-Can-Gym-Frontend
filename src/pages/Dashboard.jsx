@@ -75,10 +75,10 @@ export default function Dashboard() {
         {/* features + circular photo */}
         <div
           style={{
-        display: "flex",
-        gap: 20,
-        marginTop: 20,
-        marginBottom: 50,
+            display: "flex",
+            gap: 20,
+            marginTop: 20,
+            marginBottom: 50,
           }}
         >
           {/* left column: three features */}
@@ -98,7 +98,7 @@ export default function Dashboard() {
                 style={{
                   display: "flex",
                   gap: 15,
-                  alignItems: "center",
+                  alignItems: "flex-start",
                   background: "none",
                   border: "none",
                   padding: 0,
