@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { getActiveSubscription } from "../api/subscriptions";
 
 export default function Dashboard() {
-  const { logout } = useAuth();
+  const { logout, userId } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [hasSubscription, setHasSubscription] = useState(false);
+
+  useEffect(() => {
+    checkSubscription();
+  }, [userId]);
+
+  const checkSubscription = async () => {
+    if (userId) {
+      const subscription = await getActiveSubscription(userId);
+      setHasSubscription(!!subscription);
+    }
+  };
 
   const handleSubscribe = () => {
     window.location.href = "/packages";
+  };
+
+  const handleViewSubscription = () => {
+    window.location.href = "/subscription-management";
   };
 
   const handleProfile = () => {
@@ -390,7 +407,7 @@ const handleLogout = async () => {
 
         {/* SUBSCRIBE BUTTON */}
         <button
-          onClick={handleSubscribe}
+          onClick={hasSubscription ? handleViewSubscription : handleSubscribe}
           style={{
             marginTop: 80,
             width: "100%",
@@ -406,7 +423,7 @@ const handleLogout = async () => {
             cursor: "pointer",
           }}
         >
-          SUBSCRIBE NOW
+          {hasSubscription ? "VIEW MY SUBSCRIPTION" : "SUBSCRIBE NOW"}
         </button>
       </div>
     </div>
