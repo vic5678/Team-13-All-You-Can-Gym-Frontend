@@ -3,11 +3,13 @@ import { useAuth } from "../context/AuthContext";
 import { getActiveSubscription } from "../api/subscriptions";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
-import { GiMagnifyingGlass }  from "react-icons/gi";
+import { FaSearch, FaMapMarkedAlt, FaThumbsUp } from "react-icons/fa"; // Updated icons
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Dashboard() {
   const { userId } = useAuth();
   const [hasSubscription, setHasSubscription] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     checkSubscription();
@@ -21,12 +23,34 @@ export default function Dashboard() {
   };
 
   const handleSubscribe = () => {
-    window.location.href = "/packages";
+    navigate("/packages");
   };
 
   const handleViewSubscription = () => {
-    window.location.href = "/subscription-management";
+    navigate("/subscription-management");
   };
+
+  // Define features with icons and navigation paths
+  const features = [
+    {
+      icon: <FaSearch />,
+      title: "Search Gym Partners",
+      description: "Filter by location, ratings, or equipment.",
+      path: "/search-gyms",
+    },
+    {
+      icon: <FaMapMarkedAlt />,
+      title: "View on map",
+      description: "Discover gyms near you in real-time.",
+      path: "/gyms", // Example path
+    },
+    {
+      icon: <FaThumbsUp />,
+      title: "Ratings",
+      description: "See what others say about us.",
+      path: "/ratings", // Example path
+    },
+  ];
 
   return (
     <div
@@ -59,69 +83,68 @@ export default function Dashboard() {
         >
           {/* left column: three features */}
           <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          gap: 30,
-        }}
-          >
-        {[
-          {
-            icon: "🔍",
-            title: "Search Gym Partners",
-            description: "Filter by location, ratings, or equipment.",
-          },
-          {
-            icon: "🗺️",
-            title: "View on map",
-            description: "Discover gyms near you in real-time.",
-          },
-          {
-            icon: "👍",
-            title: "Ratings",
-            description: "See what others say about us.",
-          },
-        ].map((feature, index) => (
-          <div key={index} style={{ display: "flex", gap: 10, alignItems: 'flex-start' }}>
-            <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            background: "var(--global-accent-color-secondary)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 18,
-            flexShrink: 0, /* Add this to prevent shrinking */
-          }}
-            >
-          {feature.icon}
-            </div>
-            <div>
-          <div
             style={{
-              fontSize: 16,
-              fontWeight: 700,
-              color: "var(--global-accent-color)",
-              marginBottom: 4,
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              gap: 30,
             }}
           >
-            {feature.title}
-          </div>
-          <div
-            style={{
-              fontSize: 12,
-              lineHeight: "15px",
-              color: "var(--global-text-color-muted)",
-            }}
-          >
-            {feature.description}
-          </div>
-            </div>
-          </div>
-        ))}
+            {/* Correctly map over features */}
+            {features.map((feature, index) => (
+              <button
+                key={index}
+                onClick={() => navigate(feature.path)}
+                style={{
+                  display: "flex",
+                  gap: 15,
+                  alignItems: "center",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  textAlign: "left",
+                }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    background: "var(--global-accent-color-secondary)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 18,
+                    color: "var(--global-accent-color)",
+                    flexShrink: 0,
+                  }}
+                >
+                  {feature.icon}
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: "var(--global-accent-color)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {feature.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      lineHeight: "15px",
+                      color: "var(--global-text-color-muted)",
+                    }}
+                  >
+                    {feature.description}
+                  </div>
+                </div>
+              </button>
+            ))}
           </div>
 
           {/* right side: circular photo */}
