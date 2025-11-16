@@ -66,14 +66,76 @@
   top: 1rem;
   right: 1rem;
   z-index: 3;
+  background-color: transparent;
+  width: 16%;
+  aspect-ratio: 1 / 1;
+  /* border-radius: 1vh; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.header-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* === User Menu Styles === */
+.user-menu-container {
+  width: 16%;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.user-icon-button {
   background-color: var(--global-accent-color);
   color: var(--global-accent-color-secondary);
-  width: 16%;
+  border: none;
+  width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 1vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 3rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.user-popup-menu {
+  position: absolute;
+  bottom: 60px; /* Position above the user icon */
+  right: 0;
+  background-color: var(--global-bg-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 150px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item {
+  background: none;
+  border: none;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  width: 100%;
+  font-size: 1rem;
+  color: var(--global-text-color-muted);
+  cursor: pointer;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+.menu-item:not(:last-child) {
+  border-bottom: 1px solid #eee;
 }
