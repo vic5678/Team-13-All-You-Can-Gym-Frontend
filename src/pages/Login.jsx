@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
+import Header from "../components/Header";
 
 export default function Login() {
   const { login } = useAuth();
@@ -37,110 +38,125 @@ export default function Login() {
   };
 
   return (
-    <div
-      style={{
-        width: 402,
-        height: 874,
-        position: "relative",
-        background: "#FAFAFA",
-        overflow: "hidden",
-        margin: "0 auto",
-      }}
-    >
+    <div>
+        <Header
+        title="All You Can Gym"
+        subtitle={<>One App. Every gym<br />Train anywhere, anytime. <br />Your way.</>}
+        userIcon={false}
+      />
+      {/* WELCOME TEXT */}
+      <div
+        style={{
+          margin: "3rem 0",
+          textAlign: "center",
+          color: "var(--global-accent-color)",
+          fontSize: 33,
+          fontFamily: "Roboto",
+          fontWeight: 700,
+          lineHeight: "40px",
+        }}
+      >
+        {isAdminMode ? "ADMIN LOGIN" : "WELCOME"}
+      </div>
+      
       {/* FORM */}
-      <form onSubmit={form.handleSubmit}>
-        {/* EMAIL INPUT */}
-        <input
-          name="username"
-          value={form.values.username}
-          onChange={form.handleChange}
-          onBlur={form.handleBlur}
-          placeholder="username"
-          style={{
-            width: 284.75,
-            height: 63.37,
-            left: 59,
-            top: 444,
-            position: "absolute",
-            outline: "4px #B8ED44 solid",
-            outlineOffset: "-2px",
-            border: "none",
-            background: "transparent",
-            textAlign: "center",
-            textTransform: "none",
-            color: "#42554F",
-            fontSize: 20,
-            fontFamily: "Roboto",
-            fontWeight: 800,
-            letterSpacing: 1,
-          }}
-        />
-        {form.touched.username && form.errors.username && (
-          <small
+      <form 
+        onSubmit={form.handleSubmit}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem',
+          width: '100%',
+          maxWidth: '320px',
+          margin: '0 auto',
+        }}
+      >
+        {/* EMAIL INPUT WRAPPER */}
+        <div>
+          <input
+            name="username"
+            value={form.values.username}
+            onChange={form.handleChange}
+            onBlur={form.handleBlur}
+            placeholder="username"
             style={{
-              position: "absolute",
-              left: 59,
-              top: 512,
-              color: "crimson",
-              fontSize: 12,
+              width: '100%',
+              height: 63.37,
+              outline: "4px var(--global-accent-color-secondary) solid",
+              outlineOffset: "-2px",
+              border: "none",
+              background: "transparent",
+              textAlign: "center",
+              textTransform: "none",
+              color: "var(--global-text-color)",
+              fontSize: 20,
+              fontFamily: "Roboto",
+              fontWeight: 800,
+              letterSpacing: 1,
             }}
-          >
-            {form.errors.username}
-          </small>
-        )}
+          />
+          {form.touched.username && form.errors.username && (
+            <small
+              style={{
+                display: 'block',
+                marginTop: '4px',
+                color: "crimson",
+                fontSize: 12,
+              }}
+            >
+              {form.errors.username}
+            </small>
+          )}
+        </div>
 
-        {/* PASSWORD INPUT */}
-        <input
-          type="password"
-          name="password"
-          value={form.values.password}
-          onChange={form.handleChange}
-          onBlur={form.handleBlur}
-          placeholder="password"
-          style={{
-            width: 284.75,
-            height: 63.37,
-            left: 59,
-            top: 537,
-            position: "absolute",
-            outline: "4px #B8ED44 solid",
-            outlineOffset: "-2px",
-            border: "none",
-            background: "transparent",
-            textAlign: "center",
-            textTransform: "none",
-            color: "#42554F",
-            fontSize: 20,
-            fontFamily: "Roboto",
-            fontWeight: 800,
-            letterSpacing: 1,
-          }}
-        />
-        {form.touched.password && form.errors.password && (
-          <small
+        {/* PASSWORD INPUT WRAPPER */}
+        <div>
+          <input
+            type="password"
+            name="password"
+            value={form.values.password}
+            onChange={form.handleChange}
+            onBlur={form.handleBlur}
+            placeholder="password"
             style={{
-              position: "absolute",
-              left: 59,
-              top: 605,
-              color: "crimson",
-              fontSize: 12,
+              width: '100%',
+              height: 63.37,
+              outline: "4px var(--global-accent-color-secondary) solid",
+              outlineOffset: "-2px",
+              border: "none",
+              background: "transparent",
+              textAlign: "center",
+              textTransform: "none",
+              color: "var(--global-text-color)",
+              fontSize: 20,
+              fontFamily: "Roboto",
+              fontWeight: 800,
+              letterSpacing: 1,
             }}
-          >
-            {form.errors.password}
-          </small>
-        )}
+          />
+          {form.touched.password && form.errors.password && (
+            <small
+              style={{
+                display: 'block',
+                marginTop: '4px',
+                color: "crimson",
+                fontSize: 12,
+              }}
+            >
+              {form.errors.password}
+            </small>
+          )}
+        </div>
 
         {/* SIGN IN BUTTON */}
         <button
           type="submit"
           style={{
-            width: 284.75,
+            width: '100%',
             height: 63.37,
-            left: 60,
-            top: 630,
-            position: "absolute",
-            background: "#B8ED44",
-            outline: "4px #B8ED44 solid",
+            marginTop: '1rem', // Add some space above the button
+            background: "var(--global-accent-color-secondary)",
+            outline: "4px var(--global-accent-color-secondary) solid",
             outlineOffset: "-2px",
             border: "none",
             display: "flex",
@@ -151,7 +167,7 @@ export default function Login() {
         >
           <span
             style={{
-              color: "#42554F",
+              color: "var(--global-accent-color)",
               fontSize: 20,
               fontFamily: "Roboto",
               fontWeight: 800,
@@ -164,122 +180,51 @@ export default function Login() {
         </button>
       </form>
 
-      {/* WELCOME TEXT */}
-      <div
-        style={{
-          left: 121,
-          top: 374,
-          position: "absolute",
-          textAlign: "center",
-          color: "#42554F",
-          fontSize: 33,
-          fontFamily: "Roboto",
-          fontWeight: 700,
-          lineHeight: "40px",
-        }}
-      >
-        {isAdminMode ? "ADMIN LOGIN" : "WELCOME"}
-      </div>
+
 
       {/* "Are you a gym admin?" */}
       <div
         style={{
-          width: 402,
-          height: 200,
+          width: "100%",
+          height: "auto",
+          padding: '1.5rem 0',
           left: 0,
-          top: 756,
+          bottom: 0,
           position: "absolute",
           background: "#CCCCCC",
-          borderRadius: 10,
-        }}
-      />
-
-      <div
-        style={{
-          width: 264,
-          height: 34,
-          left: 72,
-          top: 777,
-          position: "absolute",
-          textAlign: "center",
-          color: "#42554F",
-          fontSize: 25,
-          fontFamily: "Roboto",
-          fontWeight: 500,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem'
         }}
       >
-        Are you a gym admin?
-      </div>
-
-      {/* Admin toggle box */}
+        <div
+          style={{
+        textAlign: "center",
+        color: "var(--global-accent-color)",
+        fontSize: 25,
+        fontFamily: "Roboto",
+        fontWeight: 500,
+          }}
+        >
+          Are you a gym admin?
+        </div>
+        {/* Admin toggle box */}
       <button
         type="button"
         onClick={toggleAdminMode}
         style={{
           width: 35,
           height: 35,
-          left: 184,
-          top: 822,
-          position: "absolute",
-          background: isAdminMode ? "#42554F" : "transparent",
-          border: "4px solid #42554F",
+          background: isAdminMode ? "var(--global-accent-color-secondary)" : "transparent",
+          border: "4px solid var(--global-accent-color)",
           cursor: "pointer",
         }}
       />
-
-      {/* HERO SECTION — unchanged */}
-      <div
-        style={{
-          width: 402,
-          height: 301.24,
-          left: 0,
-          top: 0,
-          position: "absolute",
-          background: "#C1E973",
-        }}
-      />
-      <div
-        style={{
-          width: 266.88,
-          height: 170.41,
-          left: 0,
-          top: 130.76,
-          position: "absolute",
-          background: "#42554F",
-          padding: "16px 18px",
-          borderTopRightRadius: 32,
-          color: "#FFFFFF",
-        }}
-      />
-      <div
-        style={{
-          left: 10,
-          top: 227,
-          position: "absolute",
-          color: "white",
-          fontSize: 15,
-          fontFamily: "Roboto",
-          fontWeight: 400,
-        }}
-      >
-        One App. Every gym <br />
-        Train anywhere, anytime. <br />
-        Your way.
-      </div>
-      <div
-        style={{
-          left: 10,
-          top: 175,
-          position: "absolute",
-          color: "white",
-          fontSize: 33,
-          fontFamily: "Roboto",
-          fontWeight: 700,
-          lineHeight: "40px",
-        }}
-      >
-        All You Can Gym
-      </div>
     </div>
+</div>
+
   );
 }
