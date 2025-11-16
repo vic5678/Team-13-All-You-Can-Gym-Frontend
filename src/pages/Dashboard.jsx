@@ -256,7 +256,19 @@ const handleLogout = async () => {
             }}
           >
             {/* feature 1 */}
-            <div style={{ display: "flex", gap: 10 }}>
+            <button
+              onClick={() => {
+                window.location.href = "/search-gyms";
+              }}
+              style={{
+                display: "flex",
+                gap: 10,
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+              }}
+            >
               <div
                 style={{
                   width: 34,
@@ -272,7 +284,7 @@ const handleLogout = async () => {
               >
                 🔍
               </div>
-              <div>
+              <div style={{ textAlign: "left" }}>
                 <div
                   style={{
                     fontSize: 16,
@@ -293,7 +305,7 @@ const handleLogout = async () => {
                   Filter by location, ratings, or equipment.
                 </div>
               </div>
-            </div>
+            </button>
 
             {/* feature 2 */}
             <div style={{ display: "flex", gap: 10 }}>

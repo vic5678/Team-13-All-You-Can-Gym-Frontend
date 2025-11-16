@@ -15,6 +15,7 @@ import CreateSession from "./pages/CreateSession";
 import BasicPlan from "./pages/BasicPlan";
 import AdminSessions from "./pages/AdminSessions";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
+import SearchGyms from "./pages/SearchGyms";
 
 export default function App() {
   return (
@@ -76,6 +77,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SubscriptionManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search-gyms"
+          element={
+            <ProtectedRoute>
+              <SearchGyms />
             </ProtectedRoute>
           }
         />
