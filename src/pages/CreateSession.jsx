@@ -1,4 +1,8 @@
 import React, { useState, useRef } from "react";
+import { createSession } from "../api/sessions"; // make sure this exists
+import { getGyms } from "../api/gyms";
+
+const DEFAULT_GYM_ID = "6918bd9901dad2f5694d1d8a"; // paste real one from terminal
 
 export default function CreateSession() {
   const [form, setForm] = useState({
@@ -8,23 +12,65 @@ export default function CreateSession() {
     type: "",
     capacity: "",
     trainer: "",
+    gymId: DEFAULT_GYM_ID,
   });
 
-  const dateTimeRef = useRef(null); // <-- ref for the datetime input
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const dateTimeRef = useRef(null);
 
   const goBack = () => {
-    window.location.href = "/AdminHome"; // back to admin home
+    window.location.href = "/AdminHome";
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (error) setError("");
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    console.log("Create session:", form);
-    alert("Session saved (demo).");
+
+    // simple frontend validation
+    if (!form.name || !form.dateTime || !form.capacity) {
+      setError("Name, Date/Time and Capacity are required");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+    
+    try {
+      const res = await getGyms();
+      const gyms = res.data;
+      console.log("Fetched gyms:", gyms);
+      if (gyms.data.length > 0) {
+        form.gymId = gyms.data[0]._id; // assign first gym's ID
+      } else {
+        throw new Error("No gyms available to assign session to.");
+      }
+      const payload = {
+        name: form.name,
+        description: form.description,
+        type: form.type,
+        capacity: Number(form.capacity),
+        trainerName: form.trainer,
+        dateTime: new Date(form.dateTime).toISOString(),
+        gymId: form.gymId,    // TODO: replace with real gymId
+      };
+
+      await createSession(payload);
+
+      alert("Session created successfully!");
+      window.location.href = "/admin/sessions";
+    } catch (err) {
+      console.error(err);
+      setError("Failed to create session. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -208,6 +254,7 @@ export default function CreateSession() {
                 fontSize: 16,
                 color: "#999",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, name: "" }))}
             >
               ⓧ
             </span>
@@ -240,7 +287,6 @@ export default function CreateSession() {
               type="button"
               onClick={() => {
                 if (dateTimeRef.current) dateTimeRef.current.showPicker?.();
-                // showPicker is supported in modern Chromium; fallback:
                 if (dateTimeRef.current) dateTimeRef.current.focus();
               }}
               style={{
@@ -291,6 +337,7 @@ export default function CreateSession() {
                 fontSize: 16,
                 color: "#999",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, description: "" }))}
             >
               ⓧ
             </span>
@@ -299,7 +346,9 @@ export default function CreateSession() {
 
         {/* TYPE */}
         <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>Type</div>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Type
+          </div>
           <div style={{ position: "relative" }}>
             <input
               type="text"
@@ -325,6 +374,7 @@ export default function CreateSession() {
                 fontSize: 16,
                 color: "#999",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, type: "" }))}
             >
               ⓧ
             </span>
@@ -361,6 +411,7 @@ export default function CreateSession() {
                 fontSize: 16,
                 color: "#999",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, capacity: "" }))}
             >
               ⓧ
             </span>
@@ -368,7 +419,7 @@ export default function CreateSession() {
         </div>
 
         {/* TRAINER */}
-        <div style={{ marginBottom: 26 }}>
+        <div style={{ marginBottom: 14 }}>
           <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
             Trainer&apos;s Name
           </div>
@@ -397,29 +448,44 @@ export default function CreateSession() {
                 fontSize: 16,
                 color: "#999",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, trainer: "" }))}
             >
               ⓧ
             </span>
           </div>
         </div>
 
+        {/* ERROR MESSAGE */}
+        {error && (
+          <div
+            style={{
+              fontSize: 12,
+              color: "crimson",
+              marginBottom: 10,
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         {/* SAVE BUTTON */}
         <button
           type="submit"
+          disabled={loading}
           style={{
             width: "100%",
             padding: "14px 0",
-            background: "#B8ED44",
+            background: loading ? "#d5f58a" : "#B8ED44",
             borderRadius: 999,
             border: "none",
             fontSize: 16,
             fontWeight: 700,
             color: "#42554F",
-            cursor: "pointer",
+            cursor: loading ? "default" : "pointer",
             marginTop: 10,
           }}
         >
-          SAVE
+          {loading ? "Saving..." : "SAVE"}
         </button>
       </form>
     </div>
