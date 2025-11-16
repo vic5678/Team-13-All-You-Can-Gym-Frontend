@@ -17,7 +17,7 @@ export function cancelSubscription(userId, subscriptionId) {
 }
 
 export function getSubscriptionPackages() {
-  return api.get("/subscriptionPackages");
+  return api.get("/subscriptions");
 }
 
 // Check if user has an active subscription
