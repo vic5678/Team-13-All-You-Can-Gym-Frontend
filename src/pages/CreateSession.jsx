@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
-import { createSession } from "../api/sessions"; // make sure this exists
-import { getGyms } from "../api/gyms";
-
-const DEFAULT_GYM_ID = "6918bd9901dad2f5694d1d8a"; // paste real one from terminal
+import { createSession } from "../api/sessions";
 
 export default function CreateSession() {
+  // read gymId that we saved at login
+  const adminGymId = localStorage.getItem("adminGymId") || "";
+
   const [form, setForm] = useState({
     name: "",
     dateTime: "",
@@ -12,7 +12,7 @@ export default function CreateSession() {
     type: "",
     capacity: "",
     trainer: "",
-    gymId: DEFAULT_GYM_ID,
+    gymId: adminGymId, // use admin's gym
   });
 
   const [error, setError] = useState("");
@@ -39,18 +39,16 @@ export default function CreateSession() {
       return;
     }
 
+    // make sure we actually have a gymId for this admin
+    if (!form.gymId) {
+      setError("No gym assigned to this admin. Cannot create session.");
+      return;
+    }
+
     setError("");
     setLoading(true);
-    
+
     try {
-      const res = await getGyms();
-      const gyms = res.data;
-      console.log("Fetched gyms:", gyms);
-      if (gyms.data.length > 0) {
-        form.gymId = gyms.data[0]._id; // assign first gym's ID
-      } else {
-        throw new Error("No gyms available to assign session to.");
-      }
       const payload = {
         name: form.name,
         description: form.description,
@@ -58,7 +56,7 @@ export default function CreateSession() {
         capacity: Number(form.capacity),
         trainerName: form.trainer,
         dateTime: new Date(form.dateTime).toISOString(),
-        gymId: form.gymId,    // TODO: replace with real gymId
+        gymId: form.gymId, // admin's gym
       };
 
       await createSession(payload);
@@ -94,7 +92,6 @@ export default function CreateSession() {
           position: "relative",
         }}
       >
-        {/* dark curved panel */}
         <div
           style={{
             position: "absolute",
@@ -121,7 +118,6 @@ export default function CreateSession() {
           </div>
         </div>
 
-        {/* runner icon top-right */}
         <div
           style={{
             position: "absolute",
@@ -261,7 +257,7 @@ export default function CreateSession() {
           </div>
         </div>
 
-        {/* DATE & TIME with real picker */}
+        {/* DATE & TIME */}
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
             Date &amp; Time
@@ -337,7 +333,9 @@ export default function CreateSession() {
                 fontSize: 16,
                 color: "#999",
               }}
-              onClick={() => setForm((prev) => ({ ...prev, description: "" }))}
+              onClick={() =>
+                setForm((prev) => ({ ...prev, description: "" }))
+              }
             >
               ⓧ
             </span>

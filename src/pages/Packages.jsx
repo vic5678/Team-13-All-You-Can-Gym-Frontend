@@ -1,16 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getSubscriptionPackages } from "../api/subscriptions";
 
 export default function SubscriptionPackages() {
-  const goToPremium = () => {
-    window.location.href = "/premium-plan";
-  };
-  const goToBasic = () => {
-    window.location.href = "/basic-plan";
-  };
+  const [packages, setPackages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const goBack = () => {
-    // adjust this to wherever you want to go back (dashboard, /, etc.)
     window.location.href = "/Dashboard";
   };
+
+  const handlePackageClick = (pkg) => {
+    // You can customize this later (detail page, checkout, etc.)
+    // For now, just log or route based on pkg.id:
+    // window.location.href = `/subscription/${pkg.id}`;
+    alert(`Selected package: ${pkg.name}`);
+  };
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await getSubscriptionPackages();
+        // backend uses successResponse: { success, message, data }
+        const data = res.data?.data || [];
+        setPackages(data);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load subscription packages.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
 
   return (
     <div
@@ -163,143 +186,92 @@ export default function SubscriptionPackages() {
           </div>
         </div>
 
-        {/* PREMIUM CARD (CLICKABLE) */}
-        <div
-          onClick={goToPremium}
-          style={{
-            background: "#C1E973",
-            borderRadius: 20,
-            padding: "22px 20px 18px",
-            boxShadow: "0 8px 18px rgba(0,0,0,0.18)",
-            marginBottom: 24,
-            position: "relative",
-            cursor: "pointer",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              right: 20,
-              top: 22,
-              width: 22,
-              height: 22,
-              borderRadius: 4,
-              border: "3px solid #42554F",
-            }}
-          />
+        {loading && <p>Loading packages…</p>}
+        {error && (
+          <p style={{ color: "crimson", marginBottom: 16 }}>{error}</p>
+        )}
 
-          <div
-            style={{
-              fontSize: 26,
-              fontWeight: 700,
-              color: "#42554F",
-              marginBottom: 4,
-            }}
-          >
-            Premium
-          </div>
+        {!loading && !error && packages.length === 0 && (
+          <p>No subscription packages available.</p>
+        )}
 
-          <div
-            style={{
-              fontSize: 16,
-              fontWeight: 500,
-              color: "#000",
-              marginBottom: 12,
-            }}
-          >
-            49.99$/month
-          </div>
+        {/* Render each package as a card */}
+        {!loading &&
+          !error &&
+          packages.map((pkg) => (
+            <div
+              key={pkg._id || pkg.id}
+              onClick={() => handlePackageClick(pkg)}
+              style={{
+                background:
+                  pkg.name.toLowerCase().includes("premium") ||
+                  pkg.id?.toLowerCase().includes("premium")
+                    ? "#C1E973"
+                    : "#D4D3D0",
+                borderRadius: 20,
+                padding: "22px 20px 18px",
+                boxShadow: "0 8px 18px rgba(0,0,0,0.18)",
+                marginBottom: 24,
+                position: "relative",
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  right: 20,
+                  top: 22,
+                  width: 22,
+                  height: 22,
+                  borderRadius: 4,
+                  border: "3px solid #42554F",
+                }}
+              />
 
-          <div
-            style={{
-              fontSize: 14,
-              color: "#263B06",
-              marginBottom: 18,
-            }}
-          >
-            Unlimited Gyms • Unlimited Sessions
-          </div>
+              <div
+                style={{
+                  fontSize: 26,
+                  fontWeight: 700,
+                  color: "#42554F",
+                  marginBottom: 4,
+                }}
+              >
+                {pkg.name}
+              </div>
 
-          <div
-            style={{
-              fontSize: 11,
-              color: "#42554F",
-            }}
-          >
-            Tap to see full details and buy.
-          </div>
-        </div>
+              <div
+                style={{
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: "#000",
+                  marginBottom: 8,
+                }}
+              >
+                {pkg.price.toFixed(2)}$/month
+              </div>
 
-        {/* BASIC CARD (NOW CLICKABLE TOO) */}
-        <div
-          onClick={goToBasic}
-          style={{
-            background: "#D4D3D0",
-            borderRadius: 20,
-            padding: "22px 20px 18px",
-            boxShadow: "0 6px 14px rgba(0,0,0,0.1)",
-            position: "relative",
-            cursor: "pointer",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              right: 20,
-              top: 22,
-              width: 22,
-              height: 22,
-              borderRadius: 4,
-              border: "3px solid #42554F",
-            }}
-          />
+              <div
+                style={{
+                  fontSize: 14,
+                  color: "#000",
+                  marginBottom: 8,
+                }}
+              >
+                {pkg.description}
+              </div>
 
-          <div
-            style={{
-              fontSize: 26,
-              fontWeight: 700,
-              color: "#42554F",
-              marginBottom: 4,
-            }}
-          >
-            Basic
-          </div>
-
-          <div
-            style={{
-              fontSize: 16,
-              fontWeight: 500,
-              color: "#000",
-              marginBottom: 8,
-            }}
-          >
-            29.99$/month
-          </div>
-
-          <div
-            style={{
-              fontSize: 14,
-              color: "#000",
-              marginBottom: 16,
-            }}
-          >
-            Access to 3 gyms
-            <br />
-            3 sessions / week
-          </div>
-
-          <div
-            style={{
-              fontSize: 11,
-              color: "#42554F",
-            }}
-          >
-            Great if you’re starting out or training casually.
-          </div>
-        </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "#42554F",
+                }}
+              >
+                Duration: {pkg.durationDays} days ·{" "}
+                {pkg.sessionLimit} sessions
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );
 }
-
-

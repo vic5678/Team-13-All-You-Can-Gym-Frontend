@@ -33,6 +33,14 @@ export function AuthProvider({ children }) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role || (isAdmin ? "gymAdmin" : "user"));
 
+
+
+      if (isAdmin && Array.isArray(data.gyms) && data.gyms.length > 0) {
+      // data.gyms is an array of ObjectId strings from backend
+      const adminGymId = data.gyms[0]; // first gym they manage
+      localStorage.setItem("adminGymId", adminGymId);
+      console.log("Saved adminGymId:", adminGymId);
+     }
       return true;
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);

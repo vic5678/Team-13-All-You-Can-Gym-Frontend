@@ -9,3 +9,7 @@ export function searchGyms(query) {
 export function filterGyms(params) {
   return api.get("/gyms/filter", { params });
 }
+
+export function getGymById(gymId) {
+  return api.get(`/gyms/${gymId}`);
+}
