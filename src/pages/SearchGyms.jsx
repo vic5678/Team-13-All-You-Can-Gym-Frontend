@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getGymsByKeyword, filterGyms, getAllGyms } from "../api/gyms";
+import React, { useState } from "react";
+import { getGymsByKeyword, getGyms } from "../api/gyms";
 
 export default function SearchGyms() {
   const [keyword, setKeyword] = useState("");
@@ -9,6 +9,7 @@ export default function SearchGyms() {
   const [showFilterMenu, setShowFilterMenu] = useState(false);
 
   // Filter state
+  const [useMaxDistance, setUseMaxDistance] = useState(false);
   const [maxDistance, setMaxDistance] = useState(50);
   const [selectedTypes, setSelectedTypes] = useState({
     Powerlifting: false,
@@ -21,14 +22,18 @@ export default function SearchGyms() {
   const gymTypes = ["Powerlifting", "Yoga", "Strength", "HIIT", "Cardio"];
 
   const handleSearch = async () => {
-    if (!keyword.trim()) {
-      setGyms([]);
-      setHasSearched(true);
-      return;
-    }
-
     try {
       setLoading(true);
+      
+      // If search bar is empty, get all gyms
+      if (!keyword.trim()) {
+        const res = await getGyms();
+        setGyms(res.data?.data || []);
+        setHasSearched(true);
+        return;
+      }
+
+      // Otherwise search by keyword
       const res = await getGymsByKeyword(keyword);
       setGyms(res.data?.data || []);
       setHasSearched(true);
@@ -45,24 +50,63 @@ export default function SearchGyms() {
     try {
       setLoading(true);
 
-      // Get user's location (simplified - using default)
-      const latitude = 40.7128;
-      const longitude = -74.0060;
+      // Get selected gym types
+      const selectedTypesList = Object.keys(selectedTypes).filter(
+        (type) => selectedTypes[type]
+      );
 
-      // Get selected session types
-      const types = Object.keys(selectedTypes)
-        .filter((type) => selectedTypes[type])
-        .join(",");
+      let allGyms = [];
 
-      // Call filter endpoint
-      const res = await filterGyms({
-        distance: maxDistance,
-        latitude,
-        longitude,
-        sessionType: types || undefined,
-      });
+      // If no types selected, get all gyms
+      if (selectedTypesList.length === 0) {
+        const res = await getGyms();
+        allGyms = res.data?.data || [];
+      } else {
+        // Search for gyms by each selected keyword
+        const gymSets = await Promise.all(
+          selectedTypesList.map(async (type) => {
+            const res = await getGymsByKeyword(type);
+            return res.data?.data || [];
+          })
+        );
 
-      setGyms(res.data?.data || []);
+        // Merge results and remove duplicates by gym ID
+        const gymMap = new Map();
+        gymSets.forEach((gyms) => {
+          gyms.forEach((gym) => {
+            if (!gymMap.has(gym._id)) {
+              gymMap.set(gym._id, gym);
+            }
+          });
+        });
+
+        allGyms = Array.from(gymMap.values());
+      }
+
+      // Apply distance filter if enabled
+      if (useMaxDistance && allGyms.length > 0) {
+        const latitude = 40.7128;
+        const longitude = -74.0060;
+        const userLat = parseFloat(latitude);
+        const userLon = parseFloat(longitude);
+
+        allGyms = allGyms.filter((gym) => {
+          const R = 6371; // Earth's radius in km
+          const dLat = (gym.latitude - userLat) * (Math.PI / 180);
+          const dLon = (gym.longitude - userLon) * (Math.PI / 180);
+          const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(userLat * (Math.PI / 180)) *
+              Math.cos(gym.latitude * (Math.PI / 180)) *
+              Math.sin(dLon / 2) *
+              Math.sin(dLon / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          const distanceInKm = R * c;
+          return distanceInKm <= maxDistance;
+        });
+      }
+
+      setGyms(allGyms);
       setHasSearched(true);
       setShowFilterMenu(false);
     } catch (err) {
@@ -74,6 +118,7 @@ export default function SearchGyms() {
   };
 
   const handleResetFilters = () => {
+    setUseMaxDistance(false);
     setMaxDistance(50);
     setSelectedTypes({
       Powerlifting: false,
@@ -216,29 +261,63 @@ export default function SearchGyms() {
             flexShrink: 0,
           }}
         >
-          {/* Distance Slider */}
+          {/* Distance Toggle and Slider */}
           <div style={{ marginBottom: 20 }}>
-            <div
+            <label
               style={{
-                fontSize: 14,
-                fontWeight: 600,
-                color: "#42554F",
-                marginBottom: 8,
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                cursor: "pointer",
+                marginBottom: 12,
               }}
             >
-              Max Distance: {maxDistance} km
-            </div>
-            <input
-              type="range"
-              min="1"
-              max="100"
-              value={maxDistance}
-              onChange={(e) => setMaxDistance(parseInt(e.target.value))}
-              style={{
-                width: "100%",
-                cursor: "pointer",
-              }}
-            />
+              <input
+                type="checkbox"
+                checked={useMaxDistance}
+                onChange={(e) => setUseMaxDistance(e.target.checked)}
+                style={{
+                  width: 18,
+                  height: 18,
+                  cursor: "pointer",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "#42554F",
+                }}
+              >
+                Use Max Distance Filter
+              </span>
+            </label>
+            
+            {useMaxDistance && (
+              <>
+                <div
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "#42554F",
+                    marginBottom: 8,
+                  }}
+                >
+                  Max Distance: {maxDistance} km
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="100"
+                  value={maxDistance}
+                  onChange={(e) => setMaxDistance(parseInt(e.target.value))}
+                  style={{
+                    width: "100%",
+                    cursor: "pointer",
+                  }}
+                />
+              </>
+            )}
           </div>
 
           {/* Gym Types Checkboxes */}
