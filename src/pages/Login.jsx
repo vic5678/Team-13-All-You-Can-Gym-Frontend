@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { login } = useAuth();
+  const [isAdminMode, setIsAdminMode] = useState(false);
 
   const form = useFormik({
     initialValues: { username: "", password: "" },
@@ -12,10 +14,27 @@ export default function Login() {
       password: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
-      const ok = await login(values);
-      if (ok) window.location.href = "/Dashboard";
+      const ok = await login({
+        username: values.username,  // treated as email
+        password: values.password,
+        isAdmin: isAdminMode,
+      });
+
+      if (ok) {
+        if (isAdminMode) {
+          window.location.href = "/AdminHome";
+        } else {
+          window.location.href = "/Dashboard";
+        }
+      } else {
+        alert("Login failed. Check your email and password.");
+      }
     },
   });
+
+  const toggleAdminMode = () => {
+    setIsAdminMode((prev) => !prev);
+  };
 
   return (
     <div
@@ -28,15 +47,15 @@ export default function Login() {
         margin: "0 auto",
       }}
     >
-      {/* FORM (username / password / sign in) */}
+      {/* FORM */}
       <form onSubmit={form.handleSubmit}>
-        {/* USERNAME INPUT */}
+        {/* EMAIL INPUT */}
         <input
           name="username"
           value={form.values.username}
           onChange={form.handleChange}
           onBlur={form.handleBlur}
-          placeholder="USERNAME"
+          placeholder="username"
           style={{
             width: 284.75,
             height: 63.37,
@@ -48,7 +67,7 @@ export default function Login() {
             border: "none",
             background: "transparent",
             textAlign: "center",
-            textTransform: "uppercase",
+            textTransform: "none",
             color: "#42554F",
             fontSize: 20,
             fontFamily: "Roboto",
@@ -77,7 +96,7 @@ export default function Login() {
           value={form.values.password}
           onChange={form.handleChange}
           onBlur={form.handleBlur}
-          placeholder="PASSWORD"
+          placeholder="password"
           style={{
             width: 284.75,
             height: 63.37,
@@ -89,7 +108,7 @@ export default function Login() {
             border: "none",
             background: "transparent",
             textAlign: "center",
-            textTransform: "uppercase",
+            textTransform: "none",
             color: "#42554F",
             fontSize: 20,
             fontFamily: "Roboto",
@@ -152,65 +171,17 @@ export default function Login() {
           top: 374,
           position: "absolute",
           textAlign: "center",
-          justifyContent: "center",
-          display: "flex",
-          flexDirection: "column",
           color: "#42554F",
           fontSize: 33,
           fontFamily: "Roboto",
           fontWeight: 700,
           lineHeight: "40px",
-          letterSpacing: 0.15,
-          wordWrap: "break-word",
         }}
       >
-        WELCOME
+        {isAdminMode ? "ADMIN LOGIN" : "WELCOME"}
       </div>
 
-      {/* "Don't have an account" + underline */}
-      <div
-        style={{
-          left: 123,
-          top: 723,
-          position: "absolute",
-          justifyContent: "flex-end",
-          display: "flex",
-          flexDirection: "column",
-          color: "#374C17",
-          fontSize: 15,
-          fontFamily: "Roboto",
-          fontWeight: 400,
-          wordWrap: "break-word",
-        }}
-      >
-        Don’t have an account?
-      </div>
-      <div
-        style={{
-          width: 170,
-          height: 0,
-          left: 116,
-          top: 743,
-          position: "absolute",
-          outline: "1px #374C17 solid",
-          outlineOffset: "-0.5px",
-        }}
-      />
-
-      {/* Demo note */}
-      <div
-        style={{
-          position: "absolute",
-          left: 100,
-          top: 760,
-          fontSize: 12,
-          color: "#555",
-        }}
-      >
-        Any non-empty credentials work for demo.
-      </div>
-
-      {/* Bottom grey admin area */}
+      {/* "Are you a gym admin?" */}
       <div
         style={{
           width: 402,
@@ -222,83 +193,47 @@ export default function Login() {
           borderRadius: 10,
         }}
       />
+
       <div
-        data-size="48"
         style={{
-          width: 42.83,
-          height: 33.5,
-          left: 183,
-          top: 822.61,
+          width: 264,
+          height: 34,
+          left: 72,
+          top: 777,
           position: "absolute",
-          overflow: "hidden",
+          textAlign: "center",
+          color: "#42554F",
+          fontSize: 25,
+          fontFamily: "Roboto",
+          fontWeight: 500,
         }}
       >
-        
+        Are you a gym admin?
       </div>
-      <div
-  style={{
-    width: 264,
-    height: 34,
-    left: 72,
-    top: 777,
-    position: "absolute",
-    textAlign: "center",
-    justifyContent: "center",
-    display: "flex",
-    flexDirection: "column",
-    color: "#42554F",
-    fontSize: 25,
-    fontFamily: "Roboto",
-    fontWeight: 500,
-  }}
->
-  Are you a gym admin?
-</div>
 
-{/* CLICKABLE SQUARE BOX */}
-<button
-  onClick={() => (window.location.href = "/AdminHome")}
-  style={{
-    width: 35,
-    height: 35,
-    left: 184,
-    top: 822,
-    position: "absolute",
-    background: "transparent",
-    border: "4px solid #42554F",
-    outlineOffset: "-2px",
-    cursor: "pointer",
-  }}
->
-</button>
+      {/* Admin toggle box */}
+      <button
+        type="button"
+        onClick={toggleAdminMode}
+        style={{
+          width: 35,
+          height: 35,
+          left: 184,
+          top: 822,
+          position: "absolute",
+          background: isAdminMode ? "#42554F" : "transparent",
+          border: "4px solid #42554F",
+          cursor: "pointer",
+        }}
+      />
 
-      {/* Top hero section */}
+      {/* HERO SECTION — unchanged */}
       <div
         style={{
           width: 402,
           height: 301.24,
           left: 0,
           top: 0,
-          position: "absolute",
-          background: "black",
-        }}
-      />
-      <div
-        style={{
-          width: 450.17,
-          height: 346.92,
-          left: 0,
-          top: -45.68,
-          position: "absolute",
-          background: "black",
-        }}
-      />
-      <div
-        style={{
-          width: 450.17,
-          height: 346.92,
-          left: 0,
-          top: -45.68,
           position: "absolute",
           background: "#C1E973",
         }}
@@ -325,13 +260,10 @@ export default function Login() {
           fontSize: 15,
           fontFamily: "Roboto",
           fontWeight: 400,
-          wordWrap: "break-word",
         }}
       >
-        One App. Every gym
-        <br />
-        Train anywhere, anytime.
-        <br />
+        One App. Every gym <br />
+        Train anywhere, anytime. <br />
         Your way.
       </div>
       <div
@@ -344,65 +276,10 @@ export default function Login() {
           fontFamily: "Roboto",
           fontWeight: 700,
           lineHeight: "40px",
-          letterSpacing: 0.15,
-          wordWrap: "break-word",
         }}
       >
         All You Can Gym
       </div>
-      <div
-        style={{
-          width: 619.77,
-          height: 523.67,
-          left: -68.65,
-          top: -123.86,
-          position: "absolute",
-          background: "rgba(255, 255, 255, 0.05)",
-        }}
-      />
-      <div
-        style={{
-          width: 96.03,
-          height: 91.77,
-          left: 299,
-          top: 7,
-          position: "absolute",
-          background: "#42554F",
-        }}
-      />
-      <div
-        style={{
-          width: 55.14,
-          height: 33.95,
-          left: 304.66,
-          top: 56.55,
-          position: "absolute",
-          background: "#C1E973",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25) inset",
-        }}
-      />
-      <div
-        style={{
-          width: 43.43,
-          height: 31.02,
-          left: 341.64,
-          top: 30.23,
-          position: "absolute",
-          background: "#C1E973",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25) inset",
-        }}
-      />
-      <div
-        style={{
-          width: 6.76,
-          height: 11.02,
-          left: 371.24,
-          top: 37.04,
-          position: "absolute",
-          background: "#C1E973",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25) inset",
-        }}
-      />
     </div>
   );
 }
