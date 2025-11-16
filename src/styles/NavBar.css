@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   /* padding: 1rem 1.5rem; */
-  background-color: var(--global-bg-color);
+  background-color: transparent;
   z-index: 1000;
   /* box-shadow: 0 -2px 10px rgba(255, 0, 0, 0.05); */
 }

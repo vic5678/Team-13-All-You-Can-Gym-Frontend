@@ -50,7 +50,6 @@ export default function SubscriptionPackages() {
       <Header
         title="Subscription Packages"
         subtitle="Choose the plan that fits your training style and schedule."
-        icon={<GiBiceps />}
       />
       <NavBar />
       {/* ===== MAIN CONTENT ===== */}
