@@ -1,28 +1,26 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { IoIosArrowBack } from 'react-icons/io';
+import { FiMenu } from 'react-icons/fi';
+import '../styles/NavBar.css';
 
-export default function NavBar() {
-  const { userId, logout } = useAuth();
+const NavBar = () => {
+  const navigate = useNavigate();
+
+  const handleMenuClick = () => {
+    navigate('/dashboard');
+  };
+
   return (
-    <nav>
-      <strong>All You Can Gym</strong>
-      {userId && (
-        <>
-          <Link to="/packages">Packages</Link>
-          <Link to="/gyms">Gyms</Link>
-          <Link to="/sessions">Sessions</Link>
-          <Link to="/activity">My Activity</Link>
-          <span style={{ marginLeft: "auto" }} />
-          <small className="muted">User: {userId}</small>
-          <button className="btn" onClick={logout}>Logout</button>
-        </>
-      )}
-      {!userId && (
-        <>
-          <span style={{ marginLeft: "auto" }} />
-          <Link to="/login">Login</Link>
-        </>
-      )}
+    <nav className="bottom-nav">
+      <button onClick={() => navigate(-1)} className="nav-button">
+        <IoIosArrowBack />
+      </button>
+      <button onClick={handleMenuClick} className="nav-button">
+        <FiMenu />
+      </button>
     </nav>
   );
-}
+};
+
+export default NavBar;

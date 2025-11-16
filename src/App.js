@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 import Packages from "./pages/Packages";
 import Gyms from "./pages/Gyms";
@@ -19,7 +18,6 @@ import AdminSessions from "./pages/AdminSessions";
 export default function App() {
   return (
     <div>
-      <NavBar />
       <Routes>
         <Route path="/" element={<Navigate to="/Login" replace />} />
         <Route
