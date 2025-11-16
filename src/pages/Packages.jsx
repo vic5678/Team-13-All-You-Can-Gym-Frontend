@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getSubscriptionPackages } from "../api/subscriptions";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import { GiBiceps } from "react-icons/gi";
 
 export default function SubscriptionPackages() {
   const [packages, setPackages] = useState([]);
@@ -38,153 +41,24 @@ export default function SubscriptionPackages() {
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
         margin: "0 auto",
         background: "#FAFAFA",
         overflow: "hidden",
         fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== HERO ===== */}
-      <div
-        style={{
-          width: "100%",
-          height: 230,
-          background: "#C1E973",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 270,
-            height: 155,
-            background: "#42554F",
-            borderTopRightRadius: 40,
-          }}
-        />
-
-        <div
-          style={{
-            position: "absolute",
-            left: 24,
-            bottom: 85,
-            color: "#FFFFFF",
-            fontSize: 26,
-            fontWeight: 700,
-            lineHeight: "32px",
-          }}
-        >
-          Subscription
-          <br />
-          Packages
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            left: 24,
-            bottom: 40,
-            color: "#FFFFFF",
-            fontSize: 12,
-            lineHeight: "16px",
-          }}
-        >
-          Choose the plan that fits your
-          <br />
-          training style and schedule.
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            right: 24,
-            top: 28,
-            width: 80,
-            height: 80,
-            borderRadius: 24,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#C1E973",
-            fontSize: 32,
-          }}
-        >
-          💪
-        </div>
-      </div>
-
+      <Header
+        title="Subscription Packages"
+        subtitle="Choose the plan that fits your training style and schedule."
+        icon={<GiBiceps />}
+      />
+      <NavBar />
       {/* ===== MAIN CONTENT ===== */}
       <div
         style={{
           padding: "20px 20px 40px",
         }}
       >
-        {/* top row: back arrow and menu icon */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 18,
-          }}
-        >
-          <button
-            type="button"
-            onClick={goBack}
-            style={{
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: 26,
-              color: "#42554F",
-            }}
-          >
-            ←
-          </button>
-
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: 50,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              alignItems: "center",
-              padding: "4px 0",
-            }}
-          >
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-          </div>
-        </div>
 
         {loading && <p>Loading packages…</p>}
         {error && (
@@ -206,8 +80,8 @@ export default function SubscriptionPackages() {
                 background:
                   pkg.name.toLowerCase().includes("premium") ||
                   pkg.id?.toLowerCase().includes("premium")
-                    ? "#C1E973"
-                    : "#D4D3D0",
+                    ? "var(--global-accent-color-secondary)" // Highlight premium packages
+                    : "#d0d3d4ff",
                 borderRadius: 20,
                 padding: "22px 20px 18px",
                 boxShadow: "0 8px 18px rgba(0,0,0,0.18)",
@@ -232,7 +106,7 @@ export default function SubscriptionPackages() {
                 style={{
                   fontSize: 26,
                   fontWeight: 700,
-                  color: "#42554F",
+                  color: "var(--global-accent-color)",
                   marginBottom: 4,
                 }}
               >
@@ -243,7 +117,7 @@ export default function SubscriptionPackages() {
                 style={{
                   fontSize: 16,
                   fontWeight: 500,
-                  color: "#000",
+                  color: "var(--global-text-color)",
                   marginBottom: 8,
                 }}
               >
@@ -253,7 +127,7 @@ export default function SubscriptionPackages() {
               <div
                 style={{
                   fontSize: 14,
-                  color: "#000",
+                  color: "var(--global-text-color)",
                   marginBottom: 8,
                 }}
               >
@@ -263,7 +137,7 @@ export default function SubscriptionPackages() {
               <div
                 style={{
                   fontSize: 12,
-                  color: "#42554F",
+                  color: "var(--global-text-color-muted)",
                 }}
               >
                 Duration: {pkg.durationDays} days ·{" "}
