@@ -15,6 +15,7 @@ import EditSession2 from "./pages/EditSession2";
 import CreateSession from "./pages/CreateSession";
 import BasicPlan from "./pages/BasicPlan";
 import AdminSessions from "./pages/AdminSessions";
+import SubscriptionManagement from "./pages/SubscriptionManagement";
 
 export default function App() {
   return (
@@ -69,6 +70,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Activity />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subscription-management"
+          element={
+            <ProtectedRoute>
+              <SubscriptionManagement />
             </ProtectedRoute>
           }
         />
