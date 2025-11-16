@@ -12,3 +12,7 @@ export function updateSubscription(userId, subscriptionId, { newPackageId }) {
 export function cancelSubscription(userId, subscriptionId) {
   return api.delete(`/users/${userId}/subscriptions/${subscriptionId}`);
 }
+
+export function getSubscriptionPackages() {
+  return api.get("/subscriptionPackages");
+}

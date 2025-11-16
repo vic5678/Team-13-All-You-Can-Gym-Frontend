@@ -34,3 +34,7 @@ export function getRecent(userId) {
 export function getActive(userId) {
   return api.get(`/users/${userId}/sessions/active`);
 }
+
+export function fetchSessionsByGym(gymId) {
+  return api.get("/sessions", { params: { gymId } });
+}
