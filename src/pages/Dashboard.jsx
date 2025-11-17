@@ -23,7 +23,7 @@ export default function Dashboard() {
   };
 
   const handleSubscribe = () => {
-    navigate("/packages");
+    navigate("/SubscriptionPackages");
   };
 
   const handleViewSubscription = () => {
