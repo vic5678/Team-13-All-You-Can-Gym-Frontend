@@ -74,7 +74,7 @@ export default function SubscriptionManagement() {
   }, [userId]);
 
   const handleGoBack = () => {
-    navigate("/dashboard");
+    navigate(-1);
   };
 
   const handleCancel = async () => {
@@ -155,7 +155,6 @@ export default function SubscriptionManagement() {
         width: 402,
         height: 874,
         margin: "0 auto",
-        background: "#FAFAFA",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -208,10 +207,7 @@ export default function SubscriptionManagement() {
 
   return (
     <div style={{
-      width: 402,
-      height: 874,
       margin: "0 auto",
-      background: "#FAFAFA",
       overflow: "hidden",
       fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
     }}>
@@ -219,7 +215,7 @@ export default function SubscriptionManagement() {
       <div style={{
         width: "100%",
         height: 80,
-        background: "#C1E973",
+        background: "var(--global-accent-color-secondary)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
