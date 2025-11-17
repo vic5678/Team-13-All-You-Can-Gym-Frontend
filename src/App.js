@@ -52,6 +52,7 @@ export default function App() {
         <Route path="/admin/sessions" element={<AdminSessions />} />
         <Route path="/admin/edit-session2" element={<EditSession2 />} />
         <Route path="/admin/create-session" element={<CreateSession />} />
+        <Route path="/packages/:id" element={<SubscriptionPackage />} />
         <Route
           path="/gyms"
           element={
