@@ -21,7 +21,7 @@ export default function AdminHome() {
       icon: <FaListAlt />,
       title: "View my sessions",
       description: "Manage and edit your existing sessions.",
-      path: "/admin/edit-session",
+      path: "/admin/sessions",
     },
     {
       icon: <FaDumbbell />,
