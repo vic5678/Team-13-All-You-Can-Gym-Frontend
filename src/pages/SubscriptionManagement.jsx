@@ -1,54 +1,80 @@
+// src/pages/SubscriptionManagement.jsx
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { getSubscriptions, getSubscriptionPackages, cancelSubscription } from "../api/subscriptions";
+import {
+  getSubscriptions,
+  getSubscriptionPackages,
+  cancelSubscription,
+} from "../api/subscriptions";
 
 export default function SubscriptionManagement() {
   const { userId } = useAuth();
+  const navigate = useNavigate();
+
   const [subscription, setSubscription] = useState(null);
   const [packageDetails, setPackageDetails] = useState(null);
+  const [allPackages, setAllPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   useEffect(() => {
+    if (!userId) return;
+
+    const loadSubscription = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        setSubscription(null);
+        setPackageDetails(null);
+
+        // 1) Get user's subscriptions
+        const subRes = await getSubscriptions(userId);
+        const subscriptions = subRes.data?.data || [];
+
+        // 2) Find active subscription
+        const now = new Date();
+        const active = subscriptions.find(
+          (sub) => sub.isActive !== false && new Date(sub.endDate) > now
+        );
+
+        if (!active) {
+          setError("No active subscription found");
+          return;
+        }
+
+        setSubscription(active);
+
+        // 3) Get all packages
+        const pkgRes = await getSubscriptionPackages();
+        const packages = pkgRes.data?.data || [];
+        setAllPackages(packages);
+
+        // 4) Find the package for the active subscription
+        const pkg = packages.find(
+          (p) => String(p._id) === String(active.packageId)
+        );
+
+        if (!pkg) {
+          setError("Subscription package not found");
+          return;
+        }
+
+        setPackageDetails(pkg);
+      } catch (err) {
+        console.error("Error loading subscription:", err);
+        setError("Failed to load subscription details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadSubscription();
   }, [userId]);
 
-  const loadSubscription = async () => {
-    try {
-      setLoading(true);
-      
-      // Get user's subscriptions
-      const subRes = await getSubscriptions(userId);
-      const subscriptions = subRes.data?.data || [];
-      
-      // Find active subscription
-      const now = new Date();
-      const active = subscriptions.find(sub => 
-        sub.isActive !== false && new Date(sub.endDate) > now
-      );
-      
-      if (!active) {
-        setError("No active subscription found");
-        return;
-      }
-      
-      setSubscription(active);
-      
-      // Get package details
-      const pkgRes = await getSubscriptionPackages();
-      const packages = pkgRes.data?.data || [];
-      const pkg = packages.find(p => String(p._id) === String(active.packageId));
-      
-      if (pkg) {
-        setPackageDetails(pkg);
-      }
-    } catch (err) {
-      console.error("Error loading subscription:", err);
-      setError("Failed to load subscription details");
-    } finally {
-      setLoading(false);
-    }
+  const handleGoBack = () => {
+    navigate("/dashboard");
   };
 
   const handleCancel = async () => {
@@ -56,27 +82,73 @@ export default function SubscriptionManagement() {
     try {
       await cancelSubscription(userId, subscription._id);
       setShowCancelConfirm(false);
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
     } catch (err) {
       console.error("Error canceling subscription:", err);
       setError("Failed to cancel subscription");
     }
   };
 
+  // ---------- PLAN TYPE / PERIOD HELPERS ----------
+
+  const currentName = (packageDetails?.name || "").toLowerCase();
+
+  const isBasicPlan = currentName.includes("basic");
+  const isPremiumPlan = currentName.includes("premium");
+
+  // Decide period from name and/or durationDays
+  const isYearly =
+    currentName.includes("year") ||
+    (packageDetails && packageDetails.durationDays >= 360);
+  const isMonthly =
+    currentName.includes("month") ||
+    (packageDetails && packageDetails.durationDays < 360);
+
+  // Returns true if plan name matches same period (month/year) as current
+  const periodMatches = (name, durationDays) => {
+    const n = (name || "").toLowerCase();
+    if (isYearly) {
+      return n.includes("year") || durationDays >= 360;
+    }
+    // default treat as monthly
+    return n.includes("month") || durationDays < 360;
+  };
+
+  const findMatchingPlan = (targetType /* 'basic' | 'premium' */) => {
+    const targetIsBasic = targetType === "basic";
+    return allPackages.find((p) => {
+      const n = (p.name || "").toLowerCase();
+      const typeOk = targetIsBasic ? n.includes("basic") : n.includes("premium");
+      const periodOk = periodMatches(p.name, p.durationDays);
+      return typeOk && periodOk;
+    });
+  };
+
   const handleUpgrade = () => {
-    // Go to premium plan
-    window.location.href = "/premium-plan";
+    if (!packageDetails || allPackages.length === 0) return;
+
+    // From Basic → Premium (same period)
+    const target = findMatchingPlan("premium");
+    if (!target) {
+      setError("Matching premium plan not found.");
+      return;
+    }
+
+    navigate(`/packages/${target._id}`); // Plan route: /packages/:id
   };
 
   const handleDowngrade = () => {
-    // Go to basic plan
-    window.location.href = "/basic-plan";
-  };
+    if (!packageDetails || allPackages.length === 0) return;
 
-  const handleGoBack = () => {
-    window.location.href = "/dashboard";
-  };
+    // From Premium → Basic (same period)
+    const target = findMatchingPlan("basic");
+    if (!target) {
+      setError("Matching basic plan not found.");
+      return;
+    }
 
+    navigate(`/packages/${target._id}`);
+  };
   if (loading) {
     return (
       <div style={{
@@ -130,7 +202,7 @@ export default function SubscriptionManagement() {
     );
   }
 
-  const isBasicPlan = packageDetails.name?.toLowerCase().includes("basic");
+  
   const startDate = new Date(subscription.startDate).toLocaleDateString();
   const nextPaymentDate = new Date(subscription.endDate).toLocaleDateString();
 
