@@ -19,8 +19,8 @@ export function getSessionById(id){
   return api.get(`/sessions/${id}`);
 }
 // Booking: spec path lacks {sessionId} param; include it in body.
-export function bookSession(userId, { sessionId, date }) {
-  return api.post(`/users/${userId}/sessions/upcoming`, { sessionId, date });
+export function bookSession(userId, { sessionId}) {
+  return api.post(`/users/${userId}/sessions/`, { sessionId });
 }
 export function cancelBooking(userId, sessionId) {
   return api.delete(`/users/${userId}/sessions/upcoming/${sessionId}`);
