@@ -85,7 +85,7 @@ export default function Login() {
                         fontSize: 14, 
                         color: '#42554F', 
                         fontFamily: 'inherit', 
-                        fontWeight: 600, 
+                        fontWeight: 200, 
                         whiteSpace: 'nowrap',
                         cursor: 'text',
                       }}>
@@ -156,7 +156,7 @@ export default function Login() {
                         fontSize: 14, 
                         color: '#42554F', 
                         fontFamily: 'inherit', 
-                        fontWeight: 600, 
+                        fontWeight: 200, 
                         whiteSpace: 'nowrap',
                         cursor: 'text',
                       }}>

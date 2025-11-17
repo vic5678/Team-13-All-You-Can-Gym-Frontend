@@ -1,0 +1,30 @@
+/* Custom checkbox styling for SearchGyms filters */
+.search-gyms-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--global-accent-color-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  background-color: white;
+  transition: background-color 0.2s ease;
+}
+
+.search-gyms-checkbox:checked {
+  background-color: var(--global-accent-color-secondary);
+  border-color: var(--global-accent-color-secondary);
+}
+
+.search-gyms-checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #42554F;
+  font-size: 14px;
+  font-weight: bold;
+}
