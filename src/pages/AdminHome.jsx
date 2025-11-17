@@ -1,307 +1,160 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "../context/AuthContext";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import { FaPlus, FaListAlt, FaDumbbell, FaBuilding } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminHome() {
-  const { user, logout } = useAuth();
-  const [showProfile, setShowProfile] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const toggleProfile = () => setShowProfile((prev) => !prev);
+  // Define admin features with icons and navigation paths
+  const features = [
+    {
+      icon: <FaPlus />,
+      title: "Create session",
+      description: "Set up new training sessions for your gym.",
+      path: "/admin/create-session",
+    },
+    {
+      icon: <FaListAlt />,
+      title: "View my sessions",
+      description: "Manage and edit your existing sessions.",
+      path: "/admin/edit-session",
+    },
+    {
+      icon: <FaDumbbell />,
+      title: "Create gym",
+      description: "Add a new gym to the platform.",
+      path: "/admin/create-gym",
+    },
+    {
+      icon: <FaBuilding />,
+      title: "View my gyms",
+      description: "See all gyms you manage.",
+      path: "/admin/my-gyms",
+    },
+  ];
 
-  const handleLogout = async () => {
-    if (logout) {
-      await logout();
-    }
-    window.location.href = "/login";
-  };
-  const handleProfile = () => {
-    window.location.href = "/profile";
-  };
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
-        margin: "0 auto",
-        background: "#FAFAFA",
         overflow: "hidden",
-        position: "relative",
-        fontFamily: "Roboto",
+        margin: "0 auto",
       }}
     >
-      {/* ===== TOP HERO ===== */}
+      <Header
+        title="All You Can Gym"
+        subtitle={<>Managing your gym and planning sessions made easier than ever.</>}
+      />
+      <NavBar />
+
+      {/* ===== MAIN CONTENT ===== */}
       <div
         style={{
-          width: "100%",
-          height: 210,
-          background: "#C1E973",
           position: "relative",
+          padding: "40px 24px 60px",
         }}
       >
-        {/* Dark curved panel */}
+        {/* features + circular photo */}
         <div
           style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 260,
-            background: "#42554F",
-            padding: "18px 20px",
-            borderTopRightRadius: 32,
-            color: "#FFFFFF",
+            display: "flex",
+            gap: 20,
+            marginTop: 20,
+            marginBottom: 50,
           }}
         >
-          <div style={{ fontSize: 24, fontWeight: 700 }}>All You Can Gym</div>
+          {/* left column: four features */}
           <div
             style={{
-              fontSize: 12,
-              lineHeight: "16px",
-              marginTop: 4,
-            }}
-          >
-            One App. Every gym
-            <br />
-            Train anywhere, anytime.
-            <br />
-            Your way.
-          </div>
-        </div>
-
-        {/* Runner Icon */}
-        <div
-          style={{
-            position: "absolute",
-            right: 16,
-            top: 16,
-            width: 78,
-            height: 78,
-            background: "#42554F",
-            borderRadius: 22,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#C1E973",
-            fontSize: 36,
-          }}
-        >
-          🏃‍♀️
-        </div>
-
-        {/* Map + User icons */}
-        <div
-          style={{
-            position: "absolute",
-            right: 32,
-            top: 112,
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-            alignItems: "center",
-          }}
-        >
-          {/* map icon (static) */}
-          <div
-            style={{
-              width: 34,
-              height: 34,
-              background: "#42554F",
-              borderRadius: 10,
-              color: "#C1E973",
+              flex: 1,
               display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: 20,
+              flexDirection: "column",
+              gap: 30,
             }}
           >
-            📍
+            {features.map((feature, index) => (
+              <button
+                key={index}
+                onClick={() => navigate(feature.path)}
+                style={{
+                  display: "flex",
+                  gap: 15,
+                  alignItems: "flex-start",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  textAlign: "left",
+                }}
+              >
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    background: "var(--global-accent-color-secondary)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 18,
+                    color: "var(--global-accent-color)",
+                    flexShrink: 0,
+                  }}
+                >
+                  {feature.icon}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: "var(--global-accent-color)",
+                      marginBottom: 4,
+                    }}
+                  >
+                    {feature.title}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: "var(--global-text-color-muted)",
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {feature.description}
+                  </div>
+                </div>
+              </button>
+            ))}
           </div>
 
-          {/* user icon (clickable for profile popup) */}
-          <button
-            type="button"
-            onClick={toggleProfile}
-            style={{
-              width: 34,
-              height: 34,
-              background: "#42554F",
-              borderRadius: 10,
-              color: "#C1E973",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: 20,
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            👤
-          </button>
-        </div>
-
-        {/* PROFILE DROPDOWN */}
-        {showProfile && (
+          {/* right: circular photo */}
           <div
             style={{
-              position: "absolute",
-              right: 16,
-              top: 155,
-              background: "#FFFFFF",
-              borderRadius: 10,
-              boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-              padding: "10px 14px",
-              minWidth: 170,
-              zIndex: 10,
+              width: 120,
+              height: 120,
+              borderRadius: "50%",
+              overflow: "hidden",
+              flexShrink: 0,
+              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
             }}
           >
-            <button
-              type="button"
-              onClick={handleProfile}
+            <img
+              src="/Photos_for_UI/GymAdmin_Session1.png"
+              alt="Gym admin"
               style={{
                 width: "100%",
-                padding: "8px 14px",
-                textAlign: "left",
-                background: "transparent",
-                border: "none",
-                fontSize: 14,
-                color: "#42554F",
-                cursor: "pointer",
-              }}
-            >
-              My profile
-            </button>
-            <div
-              style={{
-                height: 1,
-                background: "#E5E5E5",
-                margin: "4px 0",
+                height: "100%",
+                objectFit: "cover",
               }}
             />
-
-            <button
-              type="button"
-              onClick={handleLogout}
-              style={{
-                width: "100%",
-                padding: "8px 14px",
-                textAlign: "left",
-                background: "transparent",
-                border: "none",
-                fontSize: 14,
-                color: "#C0392B",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
-              Log out
-            </button>
           </div>
-        )}
-      </div>
-
-      {/* ===== CONTENT STARTS ===== */}
-      <div
-        style={{
-          padding: "30px 30px 20px",
-          textAlign: "center",
-        }}
-      >
-        {/* CREATE SESSION BUTTON */}
-        <button
-          onClick={() => (window.location.href = "/admin/create-session")}
-          style={{
-            width: "100%",
-            height: 55,
-            background: "#B8ED44",
-            borderRadius: 25,
-            border: "none",
-            fontSize: 20,
-            fontWeight: 700,
-            color: "#42554F",
-            cursor: "pointer",
-          }}
-        >
-          CREATE A SESSION
-        </button>
-
-        {/* Description */}
-        <p
-          style={{
-            marginTop: 14,
-            fontSize: 14,
-            color: "#42554F",
-            textAlign: "left",
-            width: "100%",
-            lineHeight: "20px",
-          }}
-        >
-          Create a new session for your gym.
-          <br />
-          Add the necessary details.
-          <br />
-          Subscribed users will view it &amp; book it!
-        </p>
-
-        {/* Image */}
-        <img
-          src="/Photos_for_UI/GymAdmin_Session1.png"
-          alt="gym"
-          style={{
-            width: "100%",
-            height: 150,
-            objectFit: "cover",
-            borderRadius: 12,
-            marginTop: 12,
-          }}
-        />
-
-        {/* EDIT SESSION */}
-        <button
-          onClick={() => (window.location.href = "/admin/edit-session")}
-          style={{
-            width: "100%",
-            height: 55,
-            background: "#B8ED44",
-            borderRadius: 25,
-            border: "none",
-            fontSize: 20,
-            fontWeight: 700,
-            color: "#42554F",
-            cursor: "pointer",
-            marginTop: 36,
-          }}
-        >
-          EDIT A SESSION
-        </button>
-
-        {/* Edit description */}
-        <p
-          style={{
-            marginTop: 14,
-            fontSize: 14,
-            color: "#42554F",
-            textAlign: "left",
-            lineHeight: "20px",
-          }}
-        >
-          Something wrong with your session?
-          <br />
-          Let us know if you want to make any changes.
-          <br />
-          We’ll notify the users who booked it!
-        </p>
-
-        {/* Image */}
-        <img
-          src="/Photos_for_UI/GymAdmin_Session2.png"
-          alt="edit session"
-          style={{
-            width: "100%",
-            height: 150,
-            objectFit: "cover",
-            borderRadius: 12,
-            marginTop: 12,
-          }}
-        />
+        </div>
       </div>
     </div>
   );
 }
+
