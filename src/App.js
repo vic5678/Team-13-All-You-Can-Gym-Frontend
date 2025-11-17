@@ -18,6 +18,7 @@ import AdminSessions from "./pages/AdminSessions";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
 import SearchGyms from "./pages/SearchGyms";
 import SubscriptionPackages from "./pages/Packages";
+import SearchSessions from "./pages/SearchSessions";
 
 export default function App() {
   return (
@@ -90,6 +91,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SearchGyms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search-sessions"
+          element={
+            <ProtectedRoute>
+              <SearchSessions />
             </ProtectedRoute>
           }
         />
