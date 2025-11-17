@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { getGymsByKeyword, getGyms } from "../api/gyms";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import "../styles/SearchGyms.css";
 
 export default function SearchGyms() {
   const [keyword, setKeyword] = useState("");
@@ -24,6 +27,7 @@ export default function SearchGyms() {
   const handleSearch = async () => {
     try {
       setLoading(true);
+      setShowFilterMenu(false); // Close filter menu
       
       // If search bar is empty, get all gyms
       if (!keyword.trim()) {
@@ -146,8 +150,6 @@ export default function SearchGyms() {
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
         margin: "0 auto",
         background: "#FAFAFA",
         overflow: "hidden",
@@ -157,36 +159,8 @@ export default function SearchGyms() {
       }}
     >
       {/* HEADER */}
-      <div
-        style={{
-          width: "100%",
-          height: 80,
-          background: "#C1E973",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 24px",
-          boxSizing: "border-box",
-          flexShrink: 0,
-        }}
-      >
-        <button
-          onClick={handleGoBack}
-          style={{
-            background: "none",
-            border: "none",
-            fontSize: 24,
-            cursor: "pointer",
-            color: "#42554F",
-          }}
-        >
-          ←
-        </button>
-        <div style={{ fontSize: 20, fontWeight: 700, color: "#42554F" }}>
-          Search Gyms
-        </div>
-        <div style={{ width: 24 }} />
-      </div>
+      <Header title="Search Gyms" subtitle={<>Use the search bar and configure the filters to your liking to find the perfect gym<br />for your style of training<br />&nbsp;</>} userIcon={true} />
+      <NavBar />
 
       {/* SEARCH SECTION */}
       <div
@@ -220,17 +194,22 @@ export default function SearchGyms() {
         <button
           onClick={handleSearch}
           style={{
-            padding: "10px 20px",
+            padding: "10px 16px",
             background: "#B8ED44",
             border: "none",
             borderRadius: 8,
-            fontSize: 14,
-            fontWeight: 700,
+            fontSize: 18,
             color: "#42554F",
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Search
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="7" stroke="#42554F" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M15 15L21 21" stroke="#42554F" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
         </button>
 
         {/* Filter Button */}
@@ -243,11 +222,11 @@ export default function SearchGyms() {
             borderRadius: 8,
             fontSize: 14,
             fontWeight: 700,
-            color: "#B8ED44",
+            color: "#FFFFFF",
             cursor: "pointer",
           }}
         >
-          ⚙️
+          Filters
         </button>
       </div>
 
@@ -267,21 +246,11 @@ export default function SearchGyms() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 8,
+                justifyContent: "space-between",
                 cursor: "pointer",
                 marginBottom: 12,
               }}
             >
-              <input
-                type="checkbox"
-                checked={useMaxDistance}
-                onChange={(e) => setUseMaxDistance(e.target.checked)}
-                style={{
-                  width: 18,
-                  height: 18,
-                  cursor: "pointer",
-                }}
-              />
               <span
                 style={{
                   fontSize: 14,
@@ -291,6 +260,15 @@ export default function SearchGyms() {
               >
                 Use Max Distance Filter
               </span>
+              <input
+                type="checkbox"
+                checked={useMaxDistance}
+                onChange={(e) => setUseMaxDistance(e.target.checked)}
+                className="search-gyms-checkbox"
+                style={{
+                  cursor: "pointer",
+                }}
+              />
             </label>
             
             {useMaxDistance && (
@@ -339,23 +317,22 @@ export default function SearchGyms() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 8,
+                    justifyContent: "space-between",
                     cursor: "pointer",
                     fontSize: 14,
                     color: "#42554F",
                   }}
                 >
+                  {type}
                   <input
                     type="checkbox"
                     checked={selectedTypes[type]}
                     onChange={() => handleTypeChange(type)}
+                    className="search-gyms-checkbox"
                     style={{
-                      width: 18,
-                      height: 18,
                       cursor: "pointer",
                     }}
                   />
-                  {type}
                 </label>
               ))}
             </div>
