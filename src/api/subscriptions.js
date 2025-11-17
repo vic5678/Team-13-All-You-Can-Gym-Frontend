@@ -46,3 +46,9 @@ export async function getActiveSubscription(userId) {
     return null;
   }
 }
+
+
+export const processPayment = (data) => {
+  // apiClient should already attach Authorization: Bearer <token>
+  return api.post("/payments/checkout", data);
+};

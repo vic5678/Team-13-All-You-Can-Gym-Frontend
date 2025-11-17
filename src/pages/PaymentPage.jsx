@@ -1,120 +1,157 @@
-import React from "react";
+// src/pages/PaymentPage.jsx
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import { getSubscriptionPackageById , processPayment} from "../api/subscriptions";
+
 
 export default function PaymentPage() {
-  // read ?plan=premium or ?plan=basic from the URL
-  const params = new URLSearchParams(window.location.search);
-  const plan = params.get("plan") || "premium"; // default premium
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const isPremium = plan !== "basic";
-  const itemLabel = isPremium ? "Premium" : "Basic";
-  const totalPrice = isPremium ? "49,99$" : "29,99$";
+  // read ?planId=<packageId> from the URL
+  const params = new URLSearchParams(location.search);
+  const planId = params.get("planId");
 
-  const goBack = () => {
-    window.location.href = isPremium ? "/premium-plan" : "/basic-plan";
-  };
+  const [pkg, setPkg] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleCancel = () => {
-    window.location.href = "/packages"; // or wherever you like
-  };
+  // local state for inputs
+  const [cardNumber, setCardNumber] = useState("5354 6786 8788 2324");
+  const [expiryDate, setExpiryDate] = useState("12/26");
+  const [cvv, setCvv] = useState("234");
+  const [name, setName] = useState("John Papadopoulos");
 
-  const handleConfirm = (e) => {
+  useEffect(() => {
+    const loadPackage = async () => {
+      if (!planId) {
+        setError("No plan selected.");
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        setError("");
+        const res = await getSubscriptionPackageById(planId);
+        const data = res.data?.data || res.data || null;
+        if (!data) {
+          setError("Failed to load plan details.");
+        } else {
+          setPkg(data);
+        }
+      } catch (err) {
+        console.error("Error loading plan:", err);
+        setError("Failed to load plan details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPackage();
+  }, [planId]);
+
+  const handleConfirm = async (e) => {
     e.preventDefault();
-    alert(`Payment confirmed for ${itemLabel} (${totalPrice}) – demo.`);
+    if (!pkg) return;
+
+    try {
+      setSubmitting(true);
+      setError("");
+
+      // call backend /payment/checkout
+      await processPayment({
+        cardNumber,
+        expiryDate,
+        cvv,
+        amount: pkg.price,
+        packageId: pkg._id,       // backend can use this to create subscription
+        cardHolderName: name,
+      });
+
+      // on success: go to dashboard or subscription management
+      navigate("/dashboard"); // or "/manage-subscription"
+    } catch (err) {
+      console.error("Payment error:", err);
+      setError("Payment failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#FAFAFA",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
+        }}
+      >
+        Loading payment details…
+      </div>
+    );
+  }
+
+  if (error || !pkg) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#FAFAFA",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2rem",
+          fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
+        }}
+      >
+        <div style={{ color: "crimson", marginBottom: "1rem" }}>
+          {error || "Plan not found."}
+        </div>
+        <button
+          onClick={() => navigate("/packages")}
+          style={{
+            padding: "10px 20px",
+            borderRadius: 999,
+            border: "none",
+            background: "#B8ED44",
+            color: "#42554F",
+            fontWeight: 700,
+            cursor: "pointer",
+          }}
+        >
+          Back to Packages
+        </button>
+      </div>
+    );
+  }
+
+  const itemLabel = pkg.name;
+  const totalPrice = `${pkg.price.toFixed(2)}$`;
 
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
-        margin: "0 auto",
+        minHeight: "100vh",
         background: "#FAFAFA",
-        overflow: "hidden",
         fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== HERO ===== */}
-      <div
-        style={{
-          width: "100%",
-          height: 230,
-          background: "#C1E973",
-          position: "relative",
-        }}
-      >
-        {/* dark curved block */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 270,
-            height: 155,
-            background: "#42554F",
-            borderTopRightRadius: 40,
-            padding: "22px 20px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 26,
-              fontWeight: 700,
-              color: "#FFFFFF",
-              lineHeight: "32px",
-            }}
-          >
-            Order
-            <br />
-            Summary
-          </div>
-        </div>
+      <Header title="Order Summary" subtitle={`${itemLabel} • ${totalPrice}`} />
+      <NavBar />
 
-        {/* small icon top-left */}
-        <div
-          style={{
-            position: "absolute",
-            left: 24,
-            top: 24,
-            width: 42,
-            height: 42,
-            borderRadius: 10,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#C1E973",
-            fontSize: 22,
-          }}
-        >
-          🧾
-        </div>
-
-        {/* runner icon top-right */}
-        <div
-          style={{
-            position: "absolute",
-            right: 24,
-            top: 24,
-            width: 80,
-            height: 80,
-            borderRadius: 24,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#C1E973",
-            fontSize: 32,
-          }}
-        >
-          🏃‍♀️
-        </div>
-      </div>
-
-      {/* ===== CONTENT ===== */}
       <form
         onSubmit={handleConfirm}
         style={{
+          maxWidth: 402,
+          margin: "0 auto",
           padding: "18px 22px 40px",
           height: 874 - 230,
           background:
@@ -122,65 +159,12 @@ export default function PaymentPage() {
           boxSizing: "border-box",
         }}
       >
-        {/* back + menu */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 14,
-          }}
-        >
-          <button
-            type="button"
-            onClick={goBack}
-            style={{
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: 26,
-              color: "#42554F",
-            }}
-          >
-            ←
-          </button>
-
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
+        {/* error message (if payment failed) */}
+        {error && (
+          <div style={{ color: "crimson", marginBottom: 12, fontSize: 13 }}>
+            {error}
           </div>
-        </div>
+        )}
 
         {/* item + total rows */}
         <div
@@ -249,12 +233,7 @@ export default function PaymentPage() {
         </div>
 
         {/* CARD NUMBER */}
-        <div
-          style={{
-            marginBottom: 10,
-            position: "relative",
-          }}
-        >
+        <div style={{ marginBottom: 10, position: "relative" }}>
           <div
             style={{
               fontSize: 11,
@@ -266,7 +245,8 @@ export default function PaymentPage() {
           </div>
           <input
             type="text"
-            defaultValue="5354 6786 8788 2324"
+            value={cardNumber}
+            onChange={(e) => setCardNumber(e.target.value)}
             style={{
               width: "100%",
               padding: "10px 40px 10px 10px",
@@ -310,7 +290,8 @@ export default function PaymentPage() {
             </div>
             <input
               type="text"
-              defaultValue="12/26"
+              value={expiryDate}
+              onChange={(e) => setExpiryDate(e.target.value)}
               style={{
                 width: "100%",
                 padding: "10px",
@@ -335,7 +316,8 @@ export default function PaymentPage() {
             </div>
             <input
               type="text"
-              defaultValue="234"
+              value={cvv}
+              onChange={(e) => setCvv(e.target.value)}
               style={{
                 width: "100%",
                 padding: "10px",
@@ -366,7 +348,8 @@ export default function PaymentPage() {
           </div>
           <input
             type="text"
-            defaultValue="John Papadopoulos"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             style={{
               width: "100%",
               padding: "10px",
@@ -379,52 +362,27 @@ export default function PaymentPage() {
           />
         </div>
 
-        {/* BUTTONS */}
-        <div
+        {/* CONFIRM button */}
+        <button
+          type="submit"
+          disabled={submitting}
           style={{
-            display: "flex",
-            gap: 8,
-            justifyContent: "space-between",
-            marginTop: 10,
+            width: "100%",
+            padding: "14px 0",
+            borderRadius: 999,
+            border: "none",
+            background: "#B8ED44",
+            color: "#42554F",
+            fontSize: 14,
+            fontWeight: 800,
+            letterSpacing: 0.5,
+            textTransform: "uppercase",
+            cursor: submitting ? "default" : "pointer",
+            opacity: submitting ? 0.7 : 1,
           }}
         >
-          <button
-            type="button"
-            onClick={handleCancel}
-            style={{
-              flex: 1,
-              padding: "14px 0",
-              borderRadius: 999,
-              border: "2px solid #333",
-              background: "#FFFFFF",
-              color: "#333",
-              fontSize: 14,
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            CANCEL
-          </button>
-
-          <button
-            type="submit"
-            style={{
-              flex: 1,
-              padding: "14px 0",
-              borderRadius: 999,
-              border: "none",
-              background: "#B8ED44",
-              color: "#42554F",
-              fontSize: 14,
-              fontWeight: 800,
-              letterSpacing: 0.5,
-              textTransform: "uppercase",
-              cursor: "pointer",
-            }}
-          >
-            CONFIRM PAYMENT
-          </button>
-        </div>
+          {submitting ? "PROCESSING..." : "CONFIRM PAYMENT"}
+        </button>
       </form>
     </div>
   );
