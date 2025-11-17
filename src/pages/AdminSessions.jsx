@@ -59,7 +59,7 @@ export default function AdminSessions() {
 
   const handleEditSession = (sessionId) => {
     // Store session ID and navigate to edit page
-    window.location.href = `/admin/edit-session2?sessionId=${encodeURIComponent(sessionId)}`;
+    window.location.href = `/admin/edit-session?sessionId=${encodeURIComponent(sessionId)}`;
   };
 
   const handleDeleteSession = async (sessionId) => {
