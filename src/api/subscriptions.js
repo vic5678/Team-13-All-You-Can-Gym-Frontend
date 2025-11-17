@@ -20,6 +20,10 @@ export function getSubscriptionPackages() {
   return api.get("/subscriptions");
 }
 
+export function getSubscriptionPackageById(id) {
+  return api.get(`/subscriptions/${id}`);
+}
+
 // Check if user has an active subscription
 export async function getActiveSubscription(userId) {
   try {
