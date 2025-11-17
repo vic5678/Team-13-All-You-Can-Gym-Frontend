@@ -20,9 +20,16 @@ export default function SearchGyms() {
     Strength: false,
     HIIT: false,
     Cardio: false,
+    Bodybuilding: false,
+    CrossFit: false,
+    Pilates: false,
+    Wellness: false,
+    "24": false,
+    Weights: false,
+    Cycling: false,
   });
 
-  const gymTypes = ["Powerlifting", "Yoga", "Strength", "HIIT", "Cardio"];
+  const gymTypes = ["Powerlifting", "Yoga", "Strength", "HIIT", "Cardio", "Bodybuilding", "CrossFit", "Pilates", "Wellness", "24", "Weights", "Cycling"];
 
   const handleSearch = async () => {
     try {
@@ -130,6 +137,12 @@ export default function SearchGyms() {
       Strength: false,
       HIIT: false,
       Cardio: false,
+      Bodybuilding: false,
+      CrossFit: false,
+      Pilates: false,
+      Wellness: false,
+      Weights: false,
+      Cycling: false,
     });
     setKeyword("");
     setGyms([]);
@@ -310,7 +323,14 @@ export default function SearchGyms() {
             >
               Gym Types
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <div style={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              gap: 8,
+              maxHeight: "160px",
+              overflowY: "auto",
+              paddingRight: "8px",
+            }}>
               {gymTypes.map((type) => (
                 <label
                   key={type}
