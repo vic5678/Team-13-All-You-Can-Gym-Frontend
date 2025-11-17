@@ -24,12 +24,12 @@ export default function SearchGyms() {
     CrossFit: false,
     Pilates: false,
     Wellness: false,
-    "24": false,
+    "24/7": false,
     Weights: false,
     Cycling: false,
   });
 
-  const gymTypes = ["Powerlifting", "Yoga", "Strength", "HIIT", "Cardio", "Bodybuilding", "CrossFit", "Pilates", "Wellness", "24", "Weights", "Cycling"];
+  const gymTypes = ["Powerlifting", "Yoga", "Strength", "HIIT", "Cardio", "Bodybuilding", "CrossFit", "Pilates", "Wellness", "24/7", "Weights", "Cycling"];
 
   const handleSearch = async () => {
     try {
@@ -140,6 +140,7 @@ export default function SearchGyms() {
       Bodybuilding: false,
       CrossFit: false,
       Pilates: false,
+      "24/7": false,
       Wellness: false,
       Weights: false,
       Cycling: false,
