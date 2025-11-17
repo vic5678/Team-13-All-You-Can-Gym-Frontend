@@ -3,21 +3,20 @@ import { getSubscriptionPackages } from "../api/subscriptions";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import { GiBiceps } from "react-icons/gi";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function SubscriptionPackages() {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const goBack = () => {
     window.location.href = "/Dashboard";
   };
 
   const handlePackageClick = (pkg) => {
-    // You can customize this later (detail page, checkout, etc.)
-    // For now, just log or route based on pkg.id:
-    // window.location.href = `/subscription/${pkg.id}`;
-    alert(`Selected package: ${pkg.name}`);
+    navigate(`/plan/${pkg._id}`);
   };
 
   useEffect(() => {
@@ -58,7 +57,6 @@ export default function SubscriptionPackages() {
           padding: "20px 20px 40px",
         }}
       >
-
         {loading && <p>Loading packages…</p>}
         {error && (
           <p style={{ color: "crimson", marginBottom: 16 }}>{error}</p>
