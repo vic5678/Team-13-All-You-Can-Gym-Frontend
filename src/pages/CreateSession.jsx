@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createSession } from "../api/sessions";
+import { getGyms } from "../api/gyms";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
 
 export default function CreateSession() {
-  // read gymId that we saved at login
-  const adminGymId = localStorage.getItem("adminGymId") || "";
-
   const [form, setForm] = useState({
     name: "",
     dateTime: "",
@@ -12,17 +12,52 @@ export default function CreateSession() {
     type: "",
     capacity: "",
     trainer: "",
-    gymId: adminGymId, // use admin's gym
+    gymId: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [gyms, setGyms] = useState([]);
+  const [showGymDropdown, setShowGymDropdown] = useState(false);
 
   const dateTimeRef = useRef(null);
 
-  const goBack = () => {
-    window.location.href = "/AdminHome";
-  };
+  // Fetch admin's gyms
+  useEffect(() => {
+    const fetchGyms = async () => {
+      try {
+        // Get the gym IDs stored during admin login
+        const adminGymIds = JSON.parse(localStorage.getItem("adminGymIds") || "[]");
+        console.log("Admin gym IDs from login:", adminGymIds);
+        
+        if (adminGymIds.length === 0) {
+          console.warn("No gym IDs found for this admin");
+          setGyms([]);
+          return;
+        }
+
+        // Fetch all gyms
+        const response = await getGyms();
+        console.log("All gyms response:", response.data);
+        const allGyms = response.data?.data || [];
+        console.log("All gyms:", allGyms);
+        
+        // Filter gyms that belong to this admin
+        const adminGyms = allGyms.filter(gym => {
+          const gymId = gym._id || gym.id;
+          const isAdminGym = adminGymIds.includes(gymId);
+          console.log(`Gym ${gym.name} (${gymId}): isAdminGym = ${isAdminGym}`);
+          return isAdminGym;
+        });
+        
+        console.log("Filtered admin gyms:", adminGyms);
+        setGyms(adminGyms);
+      } catch (err) {
+        console.error("Failed to fetch gyms:", err);
+      }
+    };
+    fetchGyms();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,14 +69,8 @@ export default function CreateSession() {
     e.preventDefault();
 
     // simple frontend validation
-    if (!form.name || !form.dateTime || !form.capacity) {
-      setError("Name, Date/Time and Capacity are required");
-      return;
-    }
-
-    // make sure we actually have a gymId for this admin
-    if (!form.gymId) {
-      setError("No gym assigned to this admin. Cannot create session.");
+    if (!form.name || !form.dateTime || !form.capacity || !form.gymId) {
+      setError("Name, Date/Time, Capacity, and Gym are required");
       return;
     }
 
@@ -56,16 +85,19 @@ export default function CreateSession() {
         capacity: Number(form.capacity),
         trainerName: form.trainer,
         dateTime: new Date(form.dateTime).toISOString(),
-        gymId: form.gymId, // admin's gym
+        gymId: form.gymId,
       };
 
-      await createSession(payload);
+      console.log("Creating session with payload:", payload);
+      const response = await createSession(payload);
+      console.log("Session created successfully:", response.data);
 
       alert("Session created successfully!");
       window.location.href = "/admin/sessions";
     } catch (err) {
-      console.error(err);
-      setError("Failed to create session. Please try again.");
+      console.error("Failed to create session:", err);
+      const errorMessage = err.response?.data?.message || err.message || "Failed to create session. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -74,8 +106,6 @@ export default function CreateSession() {
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
         margin: "0 auto",
         background: "#FAFAFA",
         overflow: "hidden",
@@ -83,131 +113,22 @@ export default function CreateSession() {
         fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== TOP HERO ===== */}
-      <div
-        style={{
-          width: "100%",
-          height: 230,
-          background: "#C1E973",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 270,
-            height: 155,
-            background: "#42554F",
-            borderTopRightRadius: 40,
-            padding: "22px 20px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#FFFFFF",
-            }}
-          >
-            Create
-            <br />
-            Session
-          </div>
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            right: 24,
-            top: 24,
-            width: 80,
-            height: 80,
-            borderRadius: 24,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#C1E973",
-            fontSize: 32,
-          }}
-        >
-          🏃‍♀️
-        </div>
-      </div>
+      <Header
+        title="Create Session"
+        subtitle={<>Set up new training sessions<br />for your gym<br />&nbsp;</>}
+      />
+      <NavBar />
 
       {/* ===== CONTENT ===== */}
       <form
         onSubmit={handleSave}
         style={{
           padding: "18px 22px 40px",
-          height: 874 - 230,
           background:
             "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
           boxSizing: "border-box",
         }}
       >
-        {/* back + menu */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 18,
-          }}
-        >
-          <button
-            type="button"
-            onClick={goBack}
-            style={{
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: 26,
-              color: "#42554F",
-            }}
-          >
-            ←
-          </button>
-
-          <div
-            style={{
-              width: 26,
-              height: 26,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              alignItems: "center",
-            }}
-          >
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-          </div>
-        </div>
 
         <div
           style={{
@@ -301,6 +222,100 @@ export default function CreateSession() {
               📅
             </button>
           </div>
+        </div>
+
+        {/* GYM */}
+        <div style={{ marginBottom: 14, position: "relative" }}>
+          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+            Gym * {gyms.length > 0 && `(${gyms.length} available)`}
+          </div>
+          <div
+            onClick={() => {
+              console.log("Gym field clicked. Current gyms:", gyms);
+              console.log("Dropdown state:", showGymDropdown);
+              setShowGymDropdown(!showGymDropdown);
+            }}
+            style={{
+              width: "100%",
+              padding: "10px",
+              borderRadius: 8,
+              border: "1px solid #42554F",
+              fontSize: 13,
+              background: "#FFFFFF",
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span style={{ color: form.gymId ? "#333" : "#999" }}>
+              {form.gymId
+                ? gyms.find((g) => g._id === form.gymId)?.name || "Select Gym"
+                : "Select Gym"}
+            </span>
+            <span style={{ fontSize: 10 }}>▼</span>
+          </div>
+          {showGymDropdown && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                right: 0,
+                background: "#FFFFFF",
+                border: "1px solid #42554F",
+                borderRadius: 8,
+                marginTop: 4,
+                maxHeight: 200,
+                overflowY: "auto",
+                zIndex: 10,
+                boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+              }}
+            >
+              {gyms.length === 0 ? (
+                <div
+                  style={{
+                    padding: "10px",
+                    fontSize: 13,
+                    color: "#999",
+                    textAlign: "center",
+                  }}
+                >
+                  No gyms found. Check console for details.
+                </div>
+              ) : (
+                gyms.map((gym) => (
+                  <div
+                    key={gym._id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log("Selected gym:", gym);
+                      setForm((prev) => ({ ...prev, gymId: gym._id }));
+                      setShowGymDropdown(false);
+                      if (error) setError("");
+                    }}
+                    style={{
+                      padding: "10px",
+                      cursor: "pointer",
+                      fontSize: 13,
+                      borderBottom: "1px solid #f0f0f0",
+                      background:
+                        form.gymId === gym._id ? "#f0f0f0" : "transparent",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#f9f9f9";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background =
+                        form.gymId === gym._id ? "#f0f0f0" : "transparent";
+                    }}
+                  >
+                    {gym.name}
+                  </div>
+                ))
+              )}
+            </div>
+          )}
         </div>
 
         {/* DESCRIPTION */}
