@@ -13,7 +13,7 @@ export function deleteSession(sessionId) {
   return api.delete(`/sessions/${sessionId}`);
 }
 export function searchSessions(query) {
-  return api.get("/sessions/search", { params: { query } });
+  return api.get("/sessions/search", { params: { keyword: query } });
 }
 export function getSessionById(id){
   return api.get(`/sessions/${id}`);

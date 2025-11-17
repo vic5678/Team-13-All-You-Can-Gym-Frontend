@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { getActiveSubscription } from "../api/subscriptions";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
-import { FaSearch, FaMapMarkedAlt, FaThumbsUp } from "react-icons/fa"; // Updated icons
+import { FaSearch, FaDumbbell, FaThumbsUp } from "react-icons/fa"; // Updated icons
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Dashboard() {
@@ -34,21 +34,21 @@ export default function Dashboard() {
   const features = [
     {
       icon: <FaSearch />,
-      title: "Search Gym Partners",
+      title: "Search Sessions",
       description: "Filter by location, ratings, or equipment.",
-      path: "/search-gyms",
+      path: "/search-sessions",
     },
     {
-      icon: <FaMapMarkedAlt />,
-      title: "View on map",
-      description: "Discover gyms near you in real-time.",
-      path: "/gyms", // Example path
+      icon: <FaDumbbell />,
+      title: "Search Gyms",
+      description: "Filter by keyword, type, or distance.",
+      path: "/search-gyms",
     },
     {
       icon: <FaThumbsUp />,
       title: "Ratings",
       description: "See what others say about us.",
-      path: "/ratings", // Example path
+      path: "/ratings",
     },
   ];
 
