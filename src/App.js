@@ -9,7 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import PaymentPage from "./pages/PaymentPage";
 import AdminHome from "./pages/AdminHome";
 import EditSession1 from "./pages/EditSession1";
-import EditSession2 from "./pages/EditSession2";
+import EditSession from "./pages/EditSession";
 import CreateSession from "./pages/CreateSession";
 import AdminSessions from "./pages/AdminSessions";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
@@ -43,9 +43,8 @@ export default function App() {
         <Route path="/plan/:id" element={<SubscriptionPackage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/AdminHome" element={<AdminHome />} />
-        <Route path="/admin/edit-session" element={<EditSession1 />} />
+        <Route path="/admin/edit-session" element={<EditSession />} />
         <Route path="/admin/sessions" element={<AdminSessions />} />
-        <Route path="/admin/edit-session2" element={<EditSession2 />} />
         <Route path="/admin/create-session" element={<CreateSession />} />
         <Route path="/packages/:id" element={<SubscriptionPackage />} />
         <Route
