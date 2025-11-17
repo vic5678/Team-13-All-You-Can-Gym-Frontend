@@ -33,14 +33,11 @@ export function AuthProvider({ children }) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role || (isAdmin ? "gymAdmin" : "user"));
 
-
-
       if (isAdmin && Array.isArray(data.gyms) && data.gyms.length > 0) {
-      // data.gyms is an array of ObjectId strings from backend
-      const adminGymId = data.gyms[0]; // first gym they manage
-      localStorage.setItem("adminGymId", adminGymId);
-      console.log("Saved adminGymId:", adminGymId);
-     }
+        // Store all gym IDs for the admin
+        localStorage.setItem("adminGymIds", JSON.stringify(data.gyms));
+        console.log("Saved admin gym IDs:", data.gyms);
+      }
       return true;
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
@@ -55,6 +52,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("userId");
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("adminGymIds");
   }
 
   const value = { userId, token, role, login, logout };
