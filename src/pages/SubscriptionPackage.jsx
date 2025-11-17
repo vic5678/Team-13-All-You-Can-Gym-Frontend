@@ -1,3 +1,4 @@
+// src/pages/Plan.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getSubscriptionPackageById } from "../api/subscriptions";
@@ -17,6 +18,7 @@ export default function Plan() {
       if (!id) return;
       try {
         setLoading(true);
+        setError("");
         const res = await getSubscriptionPackageById(id);
         setPackage(res.data?.data || null);
       } catch (err) {
@@ -32,23 +34,35 @@ export default function Plan() {
 
   const handleBuy = () => {
     if (!pkg) return;
+    // keep your existing payment navigation
     navigate(`/payment?planId=${pkg._id}`);
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div style={{ padding: "2rem" }}>Loading...</div>;
   }
 
   if (error) {
-    return <div style={{ color: "crimson", padding: "2rem" }}>{error}</div>;
+    return (
+      <div style={{ color: "crimson", padding: "2rem" }}>
+        {error}
+      </div>
+    );
   }
 
   if (!pkg) {
     return <div style={{ padding: "2rem" }}>Package not found.</div>;
   }
 
+  // optional: derive sessions per week like you did before
+  const sessionsPerWeek =
+    pkg.sessionLimit && pkg.durationDays
+      ? Math.round(pkg.sessionLimit / (pkg.durationDays / 7))
+      : null;
+
   return (
     <div>
+      {/* Header now uses backend data */}
       <Header
         title={pkg.name}
         subtitle={`${pkg.price.toFixed(2)}$ / ${pkg.durationDays} days`}
@@ -56,40 +70,160 @@ export default function Plan() {
       <NavBar />
 
       <div style={{ padding: "20px" }}>
-        {/* Features Section */}
+        {/* ===== Feature: Sessions ===== */}
         <div style={{ marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--global-accent-color-secondary)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: "#263B06" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginBottom: 6,
+            }}
+          >
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                background: "var(--global-accent-color-secondary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 16,
+                color: "#263B06",
+              }}
+            >
               <FaDumbbell />
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "#42554F" }}>
+            <div
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#42554F",
+              }}
+            >
               {pkg.sessionLimit} Sessions
+              {sessionsPerWeek
+                ? ` (~${sessionsPerWeek} / week)`
+                : ""}
             </div>
           </div>
-          <div style={{ fontSize: 13, color: "#555", lineHeight: "18px" }}>
-            Access any partner gym for up to {pkg.sessionLimit} sessions within the {pkg.durationDays}-day period.
+          <div
+            style={{
+              fontSize: 13,
+              color: "#555",
+              lineHeight: "18px",
+            }}
+          >
+            Access any partner gym for up to {pkg.sessionLimit} sessions within
+            the {pkg.durationDays}-day period.
           </div>
         </div>
 
+        {/* ===== Feature: Gyms / Description ===== */}
         <div style={{ marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-            <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--global-accent-color-secondary)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, color: "#263B06" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              marginBottom: 6,
+            }}
+          >
+            <div
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: "50%",
+                background: "var(--global-accent-color-secondary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 16,
+                color: "#263B06",
+              }}
+            >
               <FaInfinity />
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "#42554F" }}>
+            <div
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#42554F",
+              }}
+            >
               Unlimited Gyms
             </div>
           </div>
-          <div style={{ fontSize: 13, color: "#555", lineHeight: "18px" }}>
+          <div
+            style={{
+              fontSize: 13,
+              color: "#555",
+              lineHeight: "18px",
+            }}
+          >
             {pkg.description}
           </div>
         </div>
 
-        {/* BUY NOW button */}
+        {/* ===== IMAGE (from PremiumPlan UI) ===== */}
+        <div
+          style={{
+            width: "100%",
+            borderRadius: 14,
+            overflow: "hidden",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+            margin: "14px 0 24px",
+          }}
+        >
+          <img
+            src="/Photos_for_UI/GymPlan.png"
+            alt="Gym plan"
+            style={{
+              width: "100%",
+              height: 160,
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
+
+        {/* ===== UNLOCK COMMENT (from PremiumPlan UI) ===== */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 12,
+            marginBottom: 20,
+          }}
+        >
+          <div
+            style={{
+              width: 40,
+              fontSize: 28,
+              color: "#263B06",
+              textAlign: "center",
+            }}
+          >
+            ⬇️
+          </div>
+          <div
+            style={{
+              fontSize: 13,
+              color: "#555",
+              lineHeight: "18px",
+            }}
+          >
+            Unlock all these features to train smarter, socialize, and stay
+            motivated with the {pkg.name} plan.
+          </div>
+        </div>
+
+        {/* ===== BUY NOW button ===== */}
         <button
           onClick={handleBuy}
           style={{
-            marginTop: 32,
+            marginTop: 16,
             width: "100%",
             padding: "16px 0",
             background: "var(--global-accent-color-secondary)",
