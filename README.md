@@ -1,4 +1,6 @@
 # All You Can Gym — React Frontend
+## Description
+A mobile app offering access to a wide network of partner gyms through subscription packages. Book sessions, track progress and connect with friends for a fun, social fitness experience-anytime, anywhere.
 
 ## Quick start
 ```bash
@@ -7,13 +9,73 @@ cp .env.example .env
 npm start
 ```
 Edit `.env` to point `REACT_APP_API_BASE_URL` at your backend.
+## Installation
+1. Clone the repository:
+   ```
+   git clone https://github.com/vic5678/Team-13-All-You-Can-Gym-Frontend.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd all-you-can-gym
+   ```
+3. Install the dependencies:
+   ```
+   npm install
+   ```
+4. Create a `.env` file based on the `.env.example` file and fill in the required environment variables.
 
-## Pages
-- `/login` — simple login (stores a demo token + userId)
-- `/packages` — view & buy packages
-- `/gyms` — list/search/filter gyms
-- `/sessions` — list/search sessions, book
-- `/activity` — upcoming sessions, cancel, announcements
+## Usage
+1. Start the development:
+   ```
+   npm start
+   ```
+2. The server will run on `http://localhost:3001` by default. (If not press y in the relevant question)
+
+3. 
+## 📄 Frontend Pages
+
+Below is the complete list of pages currently included in the frontend application.
+
+## 🔐 Authentication
+- **`/login`** — User login (`Login.jsx`) / Admin login
+
+---
+
+### 🏠 Main User Dashboard
+- **`/Dashboard`** — Main dashboard after login for the unsubscribed user (`Dashboard.jsx`)
+- **`/Dashboard`** — Main dashboard after login for the subscribed user (`Dashboard.jsx`)
+
+---
+
+### 🏋️ Gyms
+- **`/gyms`** — View all gyms (`Gyms.jsx`)
+- **`/search-gyms`** — Search/filter gyms (`SearchGyms.jsx`)
+
+---
+
+### 📅 Sessions
+- **`/search-sessions`** — Search/ filter available sessions (`SearchSessions.jsx`)
+
+
+---
+
+### 🛠️ Admin — Session Management
+- **`/AdminHome`** — Gym admin home (`AdminHome.jsx`)
+- **`/admin/sessions`** — View all admin sessions (`AdminSessions.jsx`)
+- **`/admin/session/create`** — Create a new session (`CreateSession.jsx`)
+- **`/admin/session/edit/:id`** — Edit/delete an existing session (`AdminSessions.jsx`)
+
+
+---
+
+### 💳 Subscriptions & Payments
+- **`/packages`** — View all subscription packages (`SubscriptionPackages.jsx`)
+- **`/packages/:id`** — View a specific package (`SubscriptionPackage.jsx`)
+- **`/payment`** — Payment page (`PaymentPage.jsx`)
+- **`/subscription-management`** — Manage user subscriptions (`SubscriptionManagement.jsx`)
+
+---
+
 
 ## API
 Axios instance at `src/api/axios.js` reads `REACT_APP_API_BASE_URL` and attaches `Authorization` if available.
