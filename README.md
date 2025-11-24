@@ -71,7 +71,7 @@ Below is the complete list of pages currently included in the frontend applicati
 
 ### 💳 Subscriptions & Payments
 - **`/SubscriptionPackages`** — View all subscription packages (`SubscriptionPackages.jsx`)
-- - **`/plan/:id`** — View a specific package (`SubscriptionPackage.jsx`)
+- **`/plan/:id`** — View a specific package (`SubscriptionPackage.jsx`)
 - **`/payment`** — Payment page (`PaymentPage.jsx`)
 - **`/subscription-management`** — Manage user subscriptions (`SubscriptionManagement.jsx`)
 
