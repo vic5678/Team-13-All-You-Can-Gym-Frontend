@@ -31,7 +31,6 @@ Edit `.env` to point `REACT_APP_API_BASE_URL` at your backend.
    ```
 2. The server will run on `http://localhost:3001` by default. (If not press y in the relevant question)
 
-3. 
 ## 📄 Frontend Pages
 
 Below is the complete list of pages currently included in the frontend application.
@@ -41,9 +40,10 @@ Below is the complete list of pages currently included in the frontend applicati
 
 ---
 
+
 ### 🏠 Main User Dashboard
-- **`/Dashboard`** — Main dashboard after login for the unsubscribed user (`Dashboard.jsx`)
-- **`/Dashboard`** — Main dashboard after login for the subscribed user (`Dashboard.jsx`)
+- **`/dashboard`** — Main dashboard after login for the unsubscribed user (`Dashboard.jsx`)
+- **`/dashboard`** — Main dashboard after login for the subscribed user (`Dashboard.jsx`)
 
 ---
 
@@ -55,6 +55,7 @@ Below is the complete list of pages currently included in the frontend applicati
 
 ### 📅 Sessions
 - **`/search-sessions`** — Search/ filter available sessions (`SearchSessions.jsx`)
+- **`/activity`** – User activity / history (protected).
 
 
 ---
@@ -62,15 +63,15 @@ Below is the complete list of pages currently included in the frontend applicati
 ### 🛠️ Admin — Session Management
 - **`/AdminHome`** — Gym admin home (`AdminHome.jsx`)
 - **`/admin/sessions`** — View all admin sessions (`AdminSessions.jsx`)
-- **`/admin/session/create`** — Create a new session (`CreateSession.jsx`)
-- **`/admin/session/edit/:id`** — Edit/delete an existing session (`AdminSessions.jsx`)
+- **`/admin/session/create-session`** — Create a new session (`CreateSession.jsx`)
+- **`/admin/session/edit-session`** — Edit/delete an existing session (`AdminSessions.jsx`)
 
 
 ---
 
 ### 💳 Subscriptions & Payments
-- **`/packages`** — View all subscription packages (`SubscriptionPackages.jsx`)
-- **`/packages/:id`** — View a specific package (`SubscriptionPackage.jsx`)
+- **`/SubscriptionPackages`** — View all subscription packages (`SubscriptionPackages.jsx`)
+- - **`/plan/:id`** — View a specific package (`SubscriptionPackage.jsx`)
 - **`/payment`** — Payment page (`PaymentPage.jsx`)
 - **`/subscription-management`** — Manage user subscriptions (`SubscriptionManagement.jsx`)
 
