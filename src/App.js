@@ -1,23 +1,20 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Packages from "./pages/Packages";
+import SubscriptionPackages from "./pages/SubscriptionPackages";
 import SubscriptionPackage from "./pages/SubscriptionPackage"; // Import the new Plan page
 import Gyms from "./pages/Gyms";
-import Sessions from "./pages/Sessions";
 import Activity from "./pages/Activity";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
-import PremiumPlan from "./pages/PremiumPlan";
 import PaymentPage from "./pages/PaymentPage";
 import AdminHome from "./pages/AdminHome";
 import EditSession1 from "./pages/EditSession1";
-import EditSession2 from "./pages/EditSession2";
+import EditSession from "./pages/EditSession";
 import CreateSession from "./pages/CreateSession";
-import BasicPlan from "./pages/BasicPlan";
 import AdminSessions from "./pages/AdminSessions";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
 import SearchGyms from "./pages/SearchGyms";
-import SubscriptionPackages from "./pages/Packages";
+import SearchSessions from "./pages/SearchSessions";
 
 export default function App() {
   return (
@@ -35,22 +32,19 @@ export default function App() {
         {/* LOGIN MUST NOT BE PROTECTED */}
         <Route path="/login" element={<Login />} />
         <Route
-          path="/Packages"
+          path="/SubscriptionPackages"
           element={
             <ProtectedRoute>
-              <Packages />
+              <SubscriptionPackages />
             </ProtectedRoute>
           }
         />
-        <Route path="/premium-plan" element={<PremiumPlan />} />
-        <Route path="/basic-plan" element={<BasicPlan />} />
-        <Route path="/packages" element={<Packages />} />
+        <Route path="/SubscriptionPackages" element={<SubscriptionPackages />} />
         <Route path="/plan/:id" element={<SubscriptionPackage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/AdminHome" element={<AdminHome />} />
-        <Route path="/admin/edit-session" element={<EditSession1 />} />
+        <Route path="/admin/edit-session" element={<EditSession />} />
         <Route path="/admin/sessions" element={<AdminSessions />} />
-        <Route path="/admin/edit-session2" element={<EditSession2 />} />
         <Route path="/admin/create-session" element={<CreateSession />} />
         <Route path="/packages/:id" element={<SubscriptionPackage />} />
         <Route
@@ -58,14 +52,6 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Gyms />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/sessions"
-          element={
-            <ProtectedRoute>
-              <Sessions />
             </ProtectedRoute>
           }
         />
@@ -90,6 +76,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SearchGyms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search-sessions"
+          element={
+            <ProtectedRoute>
+              <SearchSessions />
             </ProtectedRoute>
           }
         />

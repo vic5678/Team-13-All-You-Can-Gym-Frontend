@@ -1,52 +1,152 @@
 // src/pages/EditSession.jsx
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
+import * as sessionApi from "../api/sessions";
 
-export default function EditSession2() {
-  // TODO: later you can load real data by ID (from URL or API)
+export default function EditSession() {
+  const navigate = useNavigate();
+  const [sessionId, setSessionId] = useState(null);
   const [form, setForm] = useState({
-    name: "Morning HIIT",
-    dateTime: "2025-01-15T09:00",
-    description: "High-intensity interval training for all levels.",
-    type: "HIIT",
-    capacity: "15",
-    trainer: "Alex Johnson",
+    name: "",
+    dateTime: "",
+    description: "",
+    type: "",
+    capacity: "",
+    trainer: "",
+    gymId: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const dateTimeRef = useRef(null);
 
-  const goBack = () => {
-    window.location.href = "/AdminHome"; // back to admin home
-  };
+  // Get session ID from URL and fetch session data
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("sessionId");
+        
+        if (!id) {
+          setError("No session ID provided");
+          setLoading(false);
+          return;
+        }
+
+        setSessionId(id);
+        console.log("Fetching session:", id);
+
+        const response = await sessionApi.getSessionById(id);
+        console.log("Session data:", response.data);
+        
+        const sessionData = response.data?.data || response.data;
+        
+        // Convert dateTime to input format
+        const dateTime = sessionData.dateTime 
+          ? new Date(sessionData.dateTime).toISOString().slice(0, 16)
+          : "";
+
+        setForm({
+          name: sessionData.name || "",
+          dateTime: dateTime,
+          description: sessionData.description || "",
+          type: sessionData.type || "",
+          capacity: sessionData.capacity?.toString() || "",
+          trainer: sessionData.trainerName || "",
+          gymId: sessionData.gymId?._id || sessionData.gymId || "",
+        });
+
+        setError("");
+      } catch (err) {
+        console.error("Error fetching session:", err);
+        setError("Failed to load session. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSession();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (error) setError("");
   };
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    console.log("Edit session (save):", form);
-    alert("Session updated (demo).");
-    // TODO: call your API here
+
+    if (!sessionId) {
+      setError("No session ID available");
+      return;
+    }
+
+    // Validate required fields
+    if (!form.name || !form.dateTime || !form.capacity) {
+      setError("Name, Date/Time, and Capacity are required");
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+
+    try {
+      const payload = {
+        name: form.name,
+        description: form.description,
+        type: form.type,
+        capacity: Number(form.capacity),
+        trainerName: form.trainer,
+        dateTime: new Date(form.dateTime).toISOString(),
+        gymId: form.gymId,
+      };
+
+      console.log("Updating session with payload:", payload);
+      const response = await sessionApi.updateSession(sessionId, payload);
+      console.log("Session updated successfully:", response.data);
+
+      alert("Session updated successfully!");
+      navigate("/admin/sessions");
+    } catch (err) {
+      console.error("Error updating session:", err);
+      const errorMessage = err.response?.data?.message || err.message || "Failed to update session. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    if (!sessionId) {
+      setError("No session ID available");
+      return;
+    }
+
     const ok = window.confirm(
       "Are you sure you want to delete this session?"
     );
     if (!ok) return;
 
-    console.log("Delete session (demo)");
-    alert("Session deleted (demo).");
-    // TODO: call your API, then redirect
-    window.location.href = "/AdminHome";
+    try {
+      console.log("Deleting session:", sessionId);
+      await sessionApi.deleteSession(sessionId);
+      
+      alert("Session deleted successfully!");
+      navigate("/admin/sessions");
+    } catch (err) {
+      console.error("Error deleting session:", err);
+      const errorMessage = err.response?.data?.message || err.message || "Failed to delete session. Please try again.";
+      setError(errorMessage);
+    }
   };
 
   return (
     <div
       style={{
-        width: 402,
-        height: 874,
         margin: "0 auto",
         background: "#FAFAFA",
         overflow: "hidden",
@@ -54,144 +154,64 @@ export default function EditSession2() {
         fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== TOP HERO ===== */}
-      <div
-        style={{
-          width: "100%",
-          height: 230,
-          background: "#C1E973",
-          position: "relative",
-        }}
-      >
-        {/* dark curved panel */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 270,
-            height: 155,
-            background: "#42554F",
-            borderTopRightRadius: 40,
-            padding: "22px 20px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#FFFFFF",
-            }}
-          >
-            Edit
-            <br />
-            Session
-          </div>
-        </div>
-
-        {/* runner icon top-right */}
-        <div
-          style={{
-            position: "absolute",
-            right: 24,
-            top: 24,
-            width: 80,
-            height: 80,
-            borderRadius: 24,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#C1E973",
-            fontSize: 32,
-          }}
-        >
-          🏃‍♀️
-        </div>
-      </div>
+      <Header
+        title="Edit Session"
+        subtitle={<>Update session details<br />Modify or delete sessions<br />&nbsp;</>}
+      />
+      <NavBar />
 
       {/* ===== CONTENT ===== */}
       <form
         onSubmit={handleSave}
         style={{
           padding: "18px 22px 40px",
-          height: 874 - 230,
           background:
             "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
           boxSizing: "border-box",
         }}
       >
-        {/* back + menu */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 18,
-          }}
-        >
-          <button
-            type="button"
-            onClick={goBack}
-            style={{
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: 26,
-              color: "#42554F",
-            }}
-          >
-            ←
-          </button>
-
+        {/* Loading state */}
+        {loading && (
           <div
             style={{
-              width: 26,
-              height: 26,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-              alignItems: "center",
+              textAlign: "center",
+              padding: "40px 20px",
+              color: "#999",
+              fontSize: 14,
             }}
           >
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
-            <span
-              style={{
-                width: 20,
-                height: 3,
-                background: "#42554F",
-                borderRadius: 2,
-              }}
-            />
+            Loading session...
           </div>
-        </div>
+        )}
 
-        <div
-          style={{
-            fontSize: 16,
-            fontWeight: 600,
-            color: "#333",
-            marginBottom: 18,
-          }}
-        >
-          Edit Session details
-        </div>
+        {/* Error message */}
+        {error && (
+          <div
+            style={{
+              padding: "12px 16px",
+              background: "#FFE5E5",
+              borderRadius: 8,
+              color: "#D32F2F",
+              fontSize: 13,
+              marginBottom: 16,
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        {!loading && (
+          <>
+            <div
+              style={{
+                fontSize: 16,
+                fontWeight: 600,
+                color: "#333",
+                marginBottom: 18,
+              }}
+            >
+              Edit Session details
+            </div>
 
         {/* NAME */}
         <div style={{ marginBottom: 14 }}>
@@ -222,7 +242,9 @@ export default function EditSession2() {
                 top: 9,
                 fontSize: 16,
                 color: "#999",
+                cursor: "pointer",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, name: "" }))}
             >
               ⓧ
             </span>
@@ -241,6 +263,7 @@ export default function EditSession2() {
               name="dateTime"
               value={form.dateTime}
               onChange={handleChange}
+              placeholder="dd/mm/yyyy, hh:mm"
               style={{
                 width: "100%",
                 padding: "10px 36px 10px 10px",
@@ -304,7 +327,11 @@ export default function EditSession2() {
                 top: 9,
                 fontSize: 16,
                 color: "#999",
+                cursor: "pointer",
               }}
+              onClick={() =>
+                setForm((prev) => ({ ...prev, description: "" }))
+              }
             >
               ⓧ
             </span>
@@ -340,7 +367,9 @@ export default function EditSession2() {
                 top: 9,
                 fontSize: 16,
                 color: "#999",
+                cursor: "pointer",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, type: "" }))}
             >
               ⓧ
             </span>
@@ -376,7 +405,9 @@ export default function EditSession2() {
                 top: 9,
                 fontSize: 16,
                 color: "#999",
+                cursor: "pointer",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, capacity: "" }))}
             >
               ⓧ
             </span>
@@ -412,7 +443,9 @@ export default function EditSession2() {
                 top: 9,
                 fontSize: 16,
                 color: "#999",
+                cursor: "pointer",
               }}
+              onClick={() => setForm((prev) => ({ ...prev, trainer: "" }))}
             >
               ⓧ
             </span>
@@ -429,24 +462,26 @@ export default function EditSession2() {
         >
           <button
             type="submit"
+            disabled={saving || loading}
             style={{
               flex: 1,
               padding: "14px 0",
-              background: "#B8ED44",
+              background: saving ? "#d5f58a" : "#B8ED44",
               borderRadius: 999,
               border: "none",
               fontSize: 16,
               fontWeight: 700,
               color: "#42554F",
-              cursor: "pointer",
+              cursor: saving || loading ? "default" : "pointer",
             }}
           >
-            SAVE CHANGES
+            {saving ? "SAVING..." : "SAVE CHANGES"}
           </button>
 
           <button
             type="button"
             onClick={handleDelete}
+            disabled={loading}
             style={{
               flex: 1,
               padding: "14px 0",
@@ -456,12 +491,14 @@ export default function EditSession2() {
               fontSize: 14,
               fontWeight: 700,
               color: "#D9534F",
-              cursor: "pointer",
+              cursor: loading ? "default" : "pointer",
             }}
           >
             DELETE
           </button>
         </div>
+          </>
+        )}
       </form>
     </div>
   );

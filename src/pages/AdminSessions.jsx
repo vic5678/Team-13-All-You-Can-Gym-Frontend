@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import * as sessionApi from "../api/sessions";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
 
 export default function AdminSessions() {
   const { userId } = useAuth();
@@ -13,50 +15,35 @@ export default function AdminSessions() {
       try {
         setLoading(true);
         
-        // Mock data for development
-        const mockSessions = [
-          {
-            id: "session-001",
-            title: "Morning Yoga",
-            description: "Relaxing yoga session for beginners and intermediate practitioners",
-            startTime: "08:00 AM - 09:00 AM",
-            maxCapacity: 15,
-          },
-          {
-            id: "session-002",
-            title: "HIIT Training",
-            description: "High-intensity interval training to boost your cardio fitness",
-            startTime: "10:00 AM - 10:45 AM",
-            maxCapacity: 20,
-          },
-          {
-            id: "session-003",
-            title: "Strength & Conditioning",
-            description: "Build muscle and increase your strength with weights",
-            startTime: "05:00 PM - 06:00 PM",
-            maxCapacity: 12,
-          },
-          {
-            id: "session-004",
-            title: "Pilates Core Workout",
-            description: "Focus on core stability and flexibility",
-            startTime: "06:30 PM - 07:30 PM",
-            maxCapacity: 18,
-          },
-          {
-            id: "session-005",
-            title: "Zumba Dance Fitness",
-            description: "Fun dance-based fitness class for all levels",
-            startTime: "07:00 PM - 08:00 PM",
-            maxCapacity: 25,
-          },
-        ];
-
-        // Uncomment the code below to fetch from backend instead of using mock data
-        // const response = await sessionApi.getAllSessions();
-        // setSessions(response.data || []);
+        // Get the gym IDs stored during admin login
+        const adminGymIds = JSON.parse(localStorage.getItem("adminGymIds") || "[]");
+        console.log("Admin gym IDs:", adminGymIds);
         
-        setSessions(mockSessions);
+        if (adminGymIds.length === 0) {
+          console.warn("No gyms found for this admin");
+          setSessions([]);
+          setError("");
+          setLoading(false);
+          return;
+        }
+
+        // Fetch all sessions and filter by admin's gyms
+        const response = await sessionApi.getAllSessions();
+        console.log("All sessions response:", response);
+        
+        const allSessions = response.data?.data || response.data || [];
+        console.log("All sessions before filtering:", allSessions);
+        
+        // Filter sessions that belong to admin's gyms
+        const adminSessions = allSessions.filter(session => {
+          const sessionGymId = session.gymId?._id || session.gymId;
+          const belongsToAdmin = adminGymIds.includes(sessionGymId);
+          console.log(`Session ${session.name} (gym: ${sessionGymId}): belongs to admin = ${belongsToAdmin}`);
+          return belongsToAdmin;
+        });
+        
+        console.log("Filtered admin sessions:", adminSessions);
+        setSessions(adminSessions);
         setError("");
       } catch (err) {
         console.error("Error fetching sessions:", err);
@@ -70,13 +57,9 @@ export default function AdminSessions() {
     fetchSessions();
   }, [userId]);
 
-  const goBack = () => {
-    window.location.href = "/admin/edit-session";
-  };
-
   const handleEditSession = (sessionId) => {
     // Store session ID and navigate to edit page
-    window.location.href = `/admin/edit-session2?sessionId=${encodeURIComponent(sessionId)}`;
+    window.location.href = `/admin/edit-session?sessionId=${encodeURIComponent(sessionId)}`;
   };
 
   const handleDeleteSession = async (sessionId) => {
@@ -85,18 +68,20 @@ export default function AdminSessions() {
     }
 
     try {
+      console.log("Deleting session:", sessionId);
       await sessionApi.deleteSession(sessionId);
-      setSessions(sessions.filter((s) => s.id !== sessionId));
+      setSessions(sessions.filter((s) => (s._id || s.id) !== sessionId));
+      alert("Session deleted successfully!");
     } catch (err) {
       console.error("Error deleting session:", err);
-      setError("Failed to delete session. Please try again.");
+      const errorMessage = err.response?.data?.message || err.message || "Failed to delete session. Please try again.";
+      setError(errorMessage);
     }
   };
 
   return (
     <div
       style={{
-        width: 402,
         minHeight: "100vh",
         margin: "0 auto",
         position: "relative",
@@ -104,91 +89,30 @@ export default function AdminSessions() {
         fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
       }}
     >
-      {/* ===== TOP HERO ===== */}
-      <div
-        style={{
-          width: "100%",
-          height: 230,
-          background: "#C1E973",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            width: 270,
-            height: 155,
-            background: "#42554F",
-            borderTopRightRadius: 40,
-            padding: "22px 20px",
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#FFFFFF",
-            }}
-          >
-            My Sessions
-          </div>
-        </div>
-
-        <div
-          style={{
-            position: "absolute",
-            right: 24,
-            top: 24,
-            width: 80,
-            height: 80,
-            borderRadius: 24,
-            background: "#42554F",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#C1E973",
-            fontSize: 32,
-          }}
-        >
-          📋
-        </div>
-      </div>
+      <Header
+        title="My Sessions"
+        subtitle={<>Manage your training sessions<br />Edit or delete sessions<br />&nbsp;</>}
+      />
+      <NavBar />
 
       {/* ===== CONTENT ===== */}
       <div
         style={{
           padding: "18px 22px 30px",
           background: "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 100%)",
-          minHeight: "calc(100vh - 230px)",
+          minHeight: "calc(100vh - 240px)",
           boxSizing: "border-box",
         }}
       >
-        {/* back button */}
+        {/* session count */}
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
             alignItems: "center",
             marginBottom: 24,
           }}
         >
-          <button
-            type="button"
-            onClick={goBack}
-            style={{
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              fontSize: 26,
-              color: "#42554F",
-            }}
-          >
-            ←
-          </button>
-
           <span
             style={{
               fontSize: 14,
@@ -250,7 +174,7 @@ export default function AdminSessions() {
           <div>
             {sessions.map((session) => (
               <div
-                key={session.id}
+                key={session._id || session.id}
                 style={{
                   padding: "16px",
                   background: "#FFFFFF",
@@ -276,7 +200,7 @@ export default function AdminSessions() {
                         marginBottom: 4,
                       }}
                     >
-                      {session.title || "Untitled Session"}
+                      {session.name || "Untitled Session"}
                     </div>
                     <div
                       style={{
@@ -284,7 +208,8 @@ export default function AdminSessions() {
                         color: "#999",
                       }}
                     >
-                      ID: {session.id}
+                      {session.type && `${session.type} • `}
+                      {session.trainerName && `Trainer: ${session.trainerName}`}
                     </div>
                   </div>
                   <span
@@ -313,14 +238,21 @@ export default function AdminSessions() {
                       {session.description}
                     </div>
                   )}
-                  {session.startTime && (
+                  {session.dateTime && (
                     <div>
-                      <strong>Time:</strong> {session.startTime}
+                      <strong>Date & Time:</strong>{" "}
+                      {new Date(session.dateTime).toLocaleString('en-GB', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
                     </div>
                   )}
-                  {session.maxCapacity && (
+                  {session.capacity && (
                     <div>
-                      <strong>Capacity:</strong> {session.maxCapacity} spots
+                      <strong>Capacity:</strong> {session.capacity} spots
                     </div>
                   )}
                 </div>
@@ -334,7 +266,7 @@ export default function AdminSessions() {
                   }}
                 >
                   <button
-                    onClick={() => handleEditSession(session.id)}
+                    onClick={() => handleEditSession(session._id || session.id)}
                     style={{
                       padding: "8px 16px",
                       background: "#B8ED44",
@@ -349,7 +281,7 @@ export default function AdminSessions() {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteSession(session.id)}
+                    onClick={() => handleDeleteSession(session._id || session.id)}
                     style={{
                       padding: "8px 16px",
                       background: "#FFE5E5",

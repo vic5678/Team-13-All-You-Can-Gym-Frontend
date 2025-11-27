@@ -35,17 +35,22 @@
   border-bottom-left-radius: 1vh;
   border-bottom-right-radius: 1vh;
   margin-bottom: 0rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
 }
 
 .header-content {
   background-color: var(--global-accent-color); /* Dark gray-green background */
   color: var(--global-bg-color);
   padding: 1.5rem;
+  padding-bottom: 2rem; /* Extra bottom padding to ensure content fits */
   border-radius: 0px;
   border-top-right-radius: 5vmin; /* Creates the large curve */;
   position: relative;
   z-index: 2;
   width: 66%;
+  align-self: stretch;
 }
 
 .header-content h1 {
