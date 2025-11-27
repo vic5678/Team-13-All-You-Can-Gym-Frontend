@@ -12,15 +12,13 @@ export default function SubscriptionManagement() {
   const { userId } = useAuth();
   const navigate = useNavigate();
 
-  const [subscription, setSubscription] = useState(null);
+  const [subscription, setSubscription] = useState(null);          // the one we show
+  const [activeSubscriptions, setActiveSubscriptions] = useState([]); // ALL active subs
   const [packageDetails, setPackageDetails] = useState(null);
   const [allPackages, setAllPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-
-  // NEW: track which subscription ID we should cancel
-  const [cancelTargetId, setCancelTargetId] = useState(null);
 
   useEffect(() => {
     if (!userId) return;
@@ -31,45 +29,41 @@ export default function SubscriptionManagement() {
         setError(null);
         setSubscription(null);
         setPackageDetails(null);
-        setCancelTargetId(null);
+        setActiveSubscriptions([]);
 
         // 1) Get user's subscriptions
         const subRes = await getSubscriptions(userId);
-        const subscriptions = subRes.data?.data || [];
+        const subscriptions = subRes.data?.data || subRes.data || [];
+
+        const now = new Date();
 
         // 2) Get all active subs (not explicitly inactive and not expired)
-        const now = new Date();
-        const activeSubscriptions = subscriptions.filter(
+        const actives = subscriptions.filter(
           (sub) => sub.isActive !== false && new Date(sub.endDate) > now
         );
 
-        if (!activeSubscriptions.length) {
+        if (!actives.length) {
           setError("No active subscription found");
           return;
         }
 
-        // What the OLD code effectively used (first active match)
-        const firstActive = activeSubscriptions[0];
+        setActiveSubscriptions(actives);
 
-        // What we want to DISPLAY (latest active by date)
-        const latestActive = activeSubscriptions.reduce((latest, current) => {
+        // 3) Pick the *latest* active subscription (by startDate or endDate)
+        const latestActive = actives.reduce((latest, current) => {
           const latestDate = new Date(latest.startDate || latest.endDate);
           const currentDate = new Date(current.startDate || current.endDate);
           return currentDate > latestDate ? current : latest;
         });
 
-        // Show newest plan in UI
         setSubscription(latestActive);
 
-        // But for cancel, behave like before (use the first active)
-        setCancelTargetId(firstActive?._id || latestActive._id);
-
-        // 3) Get all packages
+        // 4) Get all packages
         const pkgRes = await getSubscriptionPackages();
-        const packages = pkgRes.data?.data || [];
+        const packages = pkgRes.data?.data || pkgRes.data || [];
         setAllPackages(packages);
 
-        // 4) Find the package for the active subscription (the one we DISPLAY)
+        // 5) Find the package for the active (latest) subscription
         const pkg = packages.find(
           (p) => String(p._id) === String(latestActive.packageId)
         );
@@ -96,9 +90,12 @@ export default function SubscriptionManagement() {
   };
 
   const handleCancel = async () => {
-    if (!cancelTargetId) return;
+    if (!activeSubscriptions.length) return;
     try {
-      await cancelSubscription(userId, cancelTargetId);
+      // 🔥 Cancel *all* active subscriptions for this user
+      for (const sub of activeSubscriptions) {
+        await cancelSubscription(userId, sub._id);
+      }
       setShowCancelConfirm(false);
       navigate("/dashboard");
     } catch (err) {
@@ -114,7 +111,6 @@ export default function SubscriptionManagement() {
   const isBasicPlan = currentName.includes("basic");
   const isPremiumPlan = currentName.includes("premium");
 
-  // Decide period from name and/or durationDays
   const isYearly =
     currentName.includes("year") ||
     (packageDetails && packageDetails.durationDays >= 360);
@@ -122,13 +118,11 @@ export default function SubscriptionManagement() {
     currentName.includes("month") ||
     (packageDetails && packageDetails.durationDays < 360);
 
-  // Returns true if plan name matches same period (month/year) as current
   const periodMatches = (name, durationDays) => {
     const n = (name || "").toLowerCase();
     if (isYearly) {
       return n.includes("year") || durationDays >= 360;
     }
-    // default treat as monthly
     return n.includes("month") || durationDays < 360;
   };
 
@@ -151,7 +145,6 @@ export default function SubscriptionManagement() {
       return;
     }
 
-    // Plan route: /packages/:id
     navigate(`/packages/${target._id}`);
   };
 
