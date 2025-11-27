@@ -19,6 +19,9 @@ export default function SubscriptionManagement() {
   const [error, setError] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
+  // NEW: track which subscription ID we should cancel
+  const [cancelTargetId, setCancelTargetId] = useState(null);
+
   useEffect(() => {
     if (!userId) return;
 
@@ -28,32 +31,47 @@ export default function SubscriptionManagement() {
         setError(null);
         setSubscription(null);
         setPackageDetails(null);
+        setCancelTargetId(null);
 
         // 1) Get user's subscriptions
         const subRes = await getSubscriptions(userId);
         const subscriptions = subRes.data?.data || [];
 
-        // 2) Find active subscription
+        // 2) Get all active subs (not explicitly inactive and not expired)
         const now = new Date();
-        const active = subscriptions.find(
+        const activeSubscriptions = subscriptions.filter(
           (sub) => sub.isActive !== false && new Date(sub.endDate) > now
         );
 
-        if (!active) {
+        if (!activeSubscriptions.length) {
           setError("No active subscription found");
           return;
         }
 
-        setSubscription(active);
+        // What the OLD code effectively used (first active match)
+        const firstActive = activeSubscriptions[0];
+
+        // What we want to DISPLAY (latest active by date)
+        const latestActive = activeSubscriptions.reduce((latest, current) => {
+          const latestDate = new Date(latest.startDate || latest.endDate);
+          const currentDate = new Date(current.startDate || current.endDate);
+          return currentDate > latestDate ? current : latest;
+        });
+
+        // Show newest plan in UI
+        setSubscription(latestActive);
+
+        // But for cancel, behave like before (use the first active)
+        setCancelTargetId(firstActive?._id || latestActive._id);
 
         // 3) Get all packages
         const pkgRes = await getSubscriptionPackages();
         const packages = pkgRes.data?.data || [];
         setAllPackages(packages);
 
-        // 4) Find the package for the active subscription
+        // 4) Find the package for the active subscription (the one we DISPLAY)
         const pkg = packages.find(
-          (p) => String(p._id) === String(active.packageId)
+          (p) => String(p._id) === String(latestActive.packageId)
         );
 
         if (!pkg) {
@@ -78,9 +96,9 @@ export default function SubscriptionManagement() {
   };
 
   const handleCancel = async () => {
-    if (!subscription) return;
+    if (!cancelTargetId) return;
     try {
-      await cancelSubscription(userId, subscription._id);
+      await cancelSubscription(userId, cancelTargetId);
       setShowCancelConfirm(false);
       navigate("/dashboard");
     } catch (err) {
@@ -127,20 +145,19 @@ export default function SubscriptionManagement() {
   const handleUpgrade = () => {
     if (!packageDetails || allPackages.length === 0) return;
 
-    // From Basic → Premium (same period)
     const target = findMatchingPlan("premium");
     if (!target) {
       setError("Matching premium plan not found.");
       return;
     }
 
-    navigate(`/packages/${target._id}`); // Plan route: /packages/:id
+    // Plan route: /packages/:id
+    navigate(`/packages/${target._id}`);
   };
 
   const handleDowngrade = () => {
     if (!packageDetails || allPackages.length === 0) return;
 
-    // From Premium → Basic (same period)
     const target = findMatchingPlan("basic");
     if (!target) {
       setError("Matching basic plan not found.");
@@ -149,17 +166,22 @@ export default function SubscriptionManagement() {
 
     navigate(`/packages/${target._id}`);
   };
+
+  // ---------- RENDER ----------
+
   if (loading) {
     return (
-      <div style={{
-        width: 402,
-        height: 874,
-        margin: "0 auto",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
-      }}>
+      <div
+        style={{
+          width: 402,
+          height: 874,
+          margin: "0 auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
+        }}
+      >
         <div>Loading...</div>
       </div>
     );
@@ -167,16 +189,25 @@ export default function SubscriptionManagement() {
 
   if (error || !subscription || !packageDetails) {
     return (
-      <div style={{
-        width: 402,
-        height: 874,
-        margin: "0 auto",
-        background: "#FAFAFA",
-        padding: "24px",
-        fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
-      }}>
+      <div
+        style={{
+          width: 402,
+          height: 874,
+          margin: "0 auto",
+          background: "#FAFAFA",
+          padding: "24px",
+          fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
+        }}
+      >
         <div style={{ marginTop: 40, textAlign: "center" }}>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "#42554F", marginBottom: 16 }}>
+          <div
+            style={{
+              fontSize: 18,
+              fontWeight: 700,
+              color: "#42554F",
+              marginBottom: 16,
+            }}
+          >
             {error || "Subscription not found"}
           </div>
           <button
@@ -201,27 +232,30 @@ export default function SubscriptionManagement() {
     );
   }
 
-  
   const startDate = new Date(subscription.startDate).toLocaleDateString();
   const nextPaymentDate = new Date(subscription.endDate).toLocaleDateString();
 
   return (
-    <div style={{
-      margin: "0 auto",
-      overflow: "hidden",
-      fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
-    }}>
+    <div
+      style={{
+        margin: "0 auto",
+        overflow: "hidden",
+        fontFamily: "Roboto, system-ui, -apple-system, BlinkMacSystemFont",
+      }}
+    >
       {/* HEADER */}
-      <div style={{
-        width: "100%",
-        height: 80,
-        background: "var(--global-accent-color-secondary)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 24px",
-        boxSizing: "border-box",
-      }}>
+      <div
+        style={{
+          width: "100%",
+          height: 80,
+          background: "var(--global-accent-color-secondary)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 24px",
+          boxSizing: "border-box",
+        }}
+      >
         <button
           onClick={handleGoBack}
           style={{
@@ -234,56 +268,107 @@ export default function SubscriptionManagement() {
         >
           ←
         </button>
-        <div style={{ fontSize: 20, fontWeight: 700, color: "#42554F" }}>
+        <div
+          style={{
+            fontSize: 20,
+            fontWeight: 700,
+            color: "#42554F",
+          }}
+        >
           Manage Subscription
         </div>
         <div style={{ width: 24 }} />
       </div>
 
       {/* CONTENT */}
-      <div style={{
-        padding: "40px 24px 60px",
-        background: "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
-      }}>
+      <div
+        style={{
+          padding: "40px 24px 60px",
+          background:
+            "linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 60%, #F9F9F9 100%)",
+        }}
+      >
         {/* Current Plan Card */}
-        <div style={{
-          background: "#FFFFFF",
-          borderRadius: 16,
-          padding: 24,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          marginBottom: 24,
-        }}>
-          <div style={{
-            fontSize: 18,
-            fontWeight: 700,
-            color: "#42554F",
-            marginBottom: 20,
-          }}>
+        <div
+          style={{
+            background: "#FFFFFF",
+            borderRadius: 16,
+            padding: 24,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            marginBottom: 24,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 18,
+              fontWeight: 700,
+              color: "#42554F",
+              marginBottom: 20,
+            }}
+          >
             Current Plan
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "#666", fontSize: 14 }}>Subscription Plan:</span>
-              <span style={{ fontWeight: 600, color: "#42554F", fontSize: 14 }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: 12 }}
+          >
+            <div
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <span style={{ color: "#666", fontSize: 14 }}>
+                Subscription Plan:
+              </span>
+              <span
+                style={{
+                  fontWeight: 600,
+                  color: "#42554F",
+                  fontSize: 14,
+                }}
+              >
                 {packageDetails.name}
               </span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <span style={{ color: "#666", fontSize: 14 }}>Price:</span>
-              <span style={{ fontWeight: 600, color: "#42554F", fontSize: 14 }}>
+              <span
+                style={{
+                  fontWeight: 600,
+                  color: "#42554F",
+                  fontSize: 14,
+                }}
+              >
                 ${packageDetails.price}/month
               </span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <span style={{ color: "#666", fontSize: 14 }}>Started:</span>
-              <span style={{ fontWeight: 600, color: "#42554F", fontSize: 14 }}>
+              <span
+                style={{
+                  fontWeight: 600,
+                  color: "#42554F",
+                  fontSize: 14,
+                }}
+              >
                 {startDate}
               </span>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "#666", fontSize: 14 }}>Upcoming Payment:</span>
-              <span style={{ fontWeight: 600, color: "#42554F", fontSize: 14 }}>
+            <div
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <span style={{ color: "#666", fontSize: 14 }}>
+                Upcoming Payment:
+              </span>
+              <span
+                style={{
+                  fontWeight: 600,
+                  color: "#42554F",
+                  fontSize: 14,
+                }}
+              >
                 {nextPaymentDate}
               </span>
             </div>
@@ -291,7 +376,9 @@ export default function SubscriptionManagement() {
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: 12 }}
+        >
           {/* Upgrade/Downgrade Button */}
           <button
             onClick={isBasicPlan ? handleUpgrade : handleDowngrade}
@@ -307,7 +394,9 @@ export default function SubscriptionManagement() {
               cursor: "pointer",
             }}
           >
-            {isBasicPlan ? "Upgrade to Premium Plan" : "Downgrade to Basic Plan"}
+            {isBasicPlan
+              ? "Upgrade to Premium Plan"
+              : "Downgrade to Basic Plan"}
           </button>
 
           {/* Cancel Button */}
@@ -332,40 +421,49 @@ export default function SubscriptionManagement() {
 
       {/* CANCEL CONFIRMATION MODAL */}
       {showCancelConfirm && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0, 0, 0, 0.5)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 100,
-        }}>
-          <div style={{
-            background: "#FFFFFF",
-            borderRadius: 16,
-            padding: 24,
-            maxWidth: 300,
-            textAlign: "center",
-          }}>
-            <div style={{
-              fontSize: 18,
-              fontWeight: 700,
-              color: "#42554F",
-              marginBottom: 12,
-            }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 100,
+          }}
+        >
+          <div
+            style={{
+              background: "#FFFFFF",
+              borderRadius: 16,
+              padding: 24,
+              maxWidth: 300,
+              textAlign: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#42554F",
+                marginBottom: 12,
+              }}
+            >
               Cancel Subscription?
             </div>
-            <div style={{
-              fontSize: 14,
-              color: "#666",
-              marginBottom: 24,
-              lineHeight: "1.5",
-            }}>
-              Are you sure you want to cancel your {packageDetails.name}? You will lose access to all gym features.
+            <div
+              style={{
+                fontSize: 14,
+                color: "#666",
+                marginBottom: 24,
+                lineHeight: "1.5",
+              }}
+            >
+              Are you sure you want to cancel your {packageDetails.name}? You
+              will lose access to all gym features.
             </div>
             <div style={{ display: "flex", gap: 12 }}>
               <button
