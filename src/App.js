@@ -8,7 +8,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import PaymentPage from "./pages/PaymentPage";
 import AdminHome from "./pages/AdminHome";
-import EditSession1 from "./pages/EditSession1";
 import EditSession from "./pages/EditSession";
 import CreateSession from "./pages/CreateSession";
 import AdminSessions from "./pages/AdminSessions";
