@@ -49,5 +49,5 @@ export async function getActiveSubscription(userId) {
 
 
 export const processPayment = (data) => {
-  return api.post("/payments/checkout/", data);
+  return api.post(`/payments/checkout/${data.packageId}`, data);
 };
