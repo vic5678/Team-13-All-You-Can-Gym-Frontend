@@ -6,7 +6,7 @@ services:
     pullRequestOnly: false
     static:
       rewrites:
-        # This rule captures ALL incoming requests (.*) 
-        # and serves them the contents of /index.html
-        - source: '.*'
+        # This rule serves index.html for any path that doesn't match a static file.
+        # This is necessary for single-page applications like React.
+        - source: '/*'
           destination: /index.html
