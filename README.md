@@ -48,14 +48,14 @@ Below is the complete list of pages currently included in the frontend applicati
 ---
 
 ### 🏋️ Gyms
-- **`/gyms`** — View all gyms (`Gyms.jsx`)
+<!-- - **`/gyms`** — View all gyms (`Gyms.jsx`) -->
 - **`/search-gyms`** — Search/filter gyms (`SearchGyms.jsx`)
 
 ---
 
 ### 📅 Sessions
 - **`/search-sessions`** — Search/ filter available sessions (`SearchSessions.jsx`)
-- **`/activity`** – User activity / history (protected).
+<!-- - **`/activity`** – User activity / history (protected). -->
 
 
 ---
@@ -63,8 +63,8 @@ Below is the complete list of pages currently included in the frontend applicati
 ### 🛠️ Admin — Session Management
 - **`/AdminHome`** — Gym admin home (`AdminHome.jsx`)
 - **`/admin/sessions`** — View all admin sessions (`AdminSessions.jsx`)
-- **`/admin/session/create-session`** — Create a new session (`CreateSession.jsx`)
-- **`/admin/session/edit-session`** — Edit/delete an existing session (`AdminSessions.jsx`)
+- **`/admin/create-session`** — Create a new session (`CreateSession.jsx`)
+- **`/admin/edit-session?sessionId=mockSessionId`** — Edit/delete an existing session (`EditSession.jsx`)
 
 
 ---
@@ -72,7 +72,7 @@ Below is the complete list of pages currently included in the frontend applicati
 ### 💳 Subscriptions & Payments
 - **`/SubscriptionPackages`** — View all subscription packages (`SubscriptionPackages.jsx`)
 - **`/plan/:id`** — View a specific package (`SubscriptionPackage.jsx`)
-- **`/payment`** — Payment page (`PaymentPage.jsx`)
+- **`/payment?planId=mockPlanId`** — Payment page (`PaymentPage.jsx`)
 - **`/subscription-management`** — Manage user subscriptions (`SubscriptionManagement.jsx`)
 
 ---
@@ -81,4 +81,3 @@ Below is the complete list of pages currently included in the frontend applicati
 ## API
 Axios instance at `src/api/axios.js` reads `REACT_APP_API_BASE_URL` and attaches `Authorization` if available.
 Endpoints are implemented per the provided OpenAPI.
-Note: For `POST /users/{userId}/sessions/upcoming` we include `sessionId` in the **body** since the path in the spec lacks it.
