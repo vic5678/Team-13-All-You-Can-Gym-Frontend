@@ -1,0 +1,12 @@
+# render.yaml
+
+services:
+  - type: static_site
+    name: Team-13-All-You-Can-Gym-Frontend # Set your service name
+    pullRequestOnly: false
+    static:
+      rewrites:
+        # This rule captures ALL incoming requests (.*) 
+        # and serves them the contents of /index.html
+        - source: '.*'
+          destination: /index.html
