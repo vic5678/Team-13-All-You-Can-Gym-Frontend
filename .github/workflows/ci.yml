@@ -22,9 +22,9 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm start
-          wait-on: 'http://localhost:3000'
+          wait-on: 'http://localhost:3001'
         env:
-          REACT_APP_BACKEND_URL: https://mock-backend-se2.onrender.com
+          REACT_APP_BACKEND_URL: https://team-13-all-you-can-gym-backend.onrender.com/api
 
   cd:
     runs-on: ubuntu-latest

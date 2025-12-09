@@ -6,13 +6,12 @@ describe('Subscription Purchase E2E Flow', () => {
     password: 'password456'
   };
 
-  const baseUrl = 'http://localhost:3001';
 
   beforeEach(() => {
     // Clear local storage and cookies before each test
     cy.clearLocalStorage();
     cy.clearCookies();
-    cy.visit(`${baseUrl}/login`);
+    cy.visit('/login');
   });
 
  
@@ -25,7 +24,7 @@ describe('Subscription Purchase E2E Flow', () => {
     cy.url().should('include', '/Dashboard', { timeout: 10000 });
 
     // NAVIGATE TO PACKAGES
-    cy.visit(`${baseUrl}/SubscriptionPackages`);
+    cy.visit('/SubscriptionPackages');
     cy.contains(/select a plan|subscription packages/i).should('be.visible');
 
     // SELECT FIRST PACKAGE
