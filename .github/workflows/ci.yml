@@ -18,6 +18,27 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Create test admin and gym in backend
+        run: |
+          # Create test admin account
+          curl -X POST https://team-13-all-you-can-gym-backend.onrender.com/api/gymAdmins \
+            -H "Content-Type: application/json" \
+            -d '{"email":"testadmin@test.com","password":"Test123!","username":"Test Admin"}'
+          
+          # Wait a moment for admin to be created
+          sleep 2
+          
+          # Login and get token
+          TOKEN=$(curl -s -X POST https://team-13-all-you-can-gym-backend.onrender.com/api/gymAdmins/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"testadmin@test.com","password":"Test123!"}' | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
+          
+          # Create test gym with token
+          curl -X POST https://team-13-all-you-can-gym-backend.onrender.com/api/gyms \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $TOKEN" \
+            -d '{"name":"Test Gym","location":"123 Test St","description":"Test gym for E2E tests","latitude":40.7128,"longitude":-74.0060,"images":["https://example.com/gym.jpg"],"facilities":["Weights","Cardio"],"openingHours":"6 AM - 10 PM","contactInfo":"test@gym.com"}'
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
