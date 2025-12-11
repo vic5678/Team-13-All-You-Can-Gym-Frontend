@@ -2,8 +2,8 @@
 
 describe('Create Session E2E Flow', () => {
   const testAdmin = {
-    username: 'testadmin@test.com',
-    password: 'Test123!'
+    username: 'admin1@example.com',
+    password: 'adminpass1'
   };
 
   const newSession = {
@@ -14,6 +14,8 @@ describe('Create Session E2E Flow', () => {
     trainer: 'Maria Rodriguez',
     dateTime: '2025-12-15T18:00'
   };
+
+  const gymName = 'FitLife Studio';
 
   beforeEach(() => {
     // Clear local storage and cookies before each test
@@ -75,7 +77,7 @@ describe('Create Session E2E Flow', () => {
     cy.wait(500);
     
     // Select the first gym from the dropdown list (should be "Test Gym")
-    cy.get('div').contains('Test Gym').click();
+    cy.get('div').contains(gymName).click();
     cy.log('Test Gym selected');
 
     // ========== STEP 7: FILL DESCRIPTION ==========
@@ -221,7 +223,7 @@ describe('Create Session E2E Flow', () => {
     cy.log('Selecting gym');
     cy.contains('Gym').parent().click();
     cy.wait(500);
-    cy.get('div').contains('Test Gym').click();
+    cy.get('div').contains(gymName).click();
 
     cy.log('Filling capacity');
     cy.get('input[name="capacity"]').clear().type('50');
@@ -277,7 +279,7 @@ describe('Create Session E2E Flow', () => {
     // Select gym
     cy.contains('Gym').parent().click();
     cy.wait(500);
-    cy.get('div').contains('Test Gym').click();
+    cy.get('div').contains(gymName).click();
 
     // Set unreasonably high capacity (backend should reject)
     cy.log('Setting excessive capacity (999999)');
