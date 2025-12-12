@@ -192,7 +192,7 @@ export default function Login() {
                       border: 'none',
                       cursor: 'pointer',
                       padding: 0,
-                      display: 'flex',
+                      display: (form.values.password || passwordFocused) ? 'flex' : 'none',
                       alignItems: 'center',
                       justifyContent: 'center',
                       flexShrink: 0,
