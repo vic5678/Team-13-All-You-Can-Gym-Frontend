@@ -4,8 +4,7 @@
   --global-text-color-muted: #6b7280;
   --global-accent-color: #42554F;
   --global-accent-color-hover: #33403B;
-  /* --global-accent-color-secondary: #C1E973; */
-  --global-accent-color-secondary: #e3e63b;
+  --global-accent-color-secondary: #C1E973;
 }
 
 * { box-sizing: border-box; }
