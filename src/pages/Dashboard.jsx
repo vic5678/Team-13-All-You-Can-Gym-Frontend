@@ -12,15 +12,14 @@ export default function Dashboard() {
   const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
+    const checkSubscription = async () => {
+      if (userId) {
+        const subscription = await getActiveSubscription(userId);
+        setHasSubscription(!!subscription);
+      }
+    };
     checkSubscription();
   }, [userId]);
-
-  const checkSubscription = async () => {
-    if (userId) {
-      const subscription = await getActiveSubscription(userId);
-      setHasSubscription(!!subscription);
-    }
-  };
 
   const handleSubscribe = () => {
     navigate("/SubscriptionPackages");

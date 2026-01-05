@@ -109,14 +109,10 @@ export default function SubscriptionManagement() {
   const currentName = (packageDetails?.name || "").toLowerCase();
 
   const isBasicPlan = currentName.includes("basic");
-  const isPremiumPlan = currentName.includes("premium");
 
   const isYearly =
     currentName.includes("year") ||
     (packageDetails && packageDetails.durationDays >= 360);
-  const isMonthly =
-    currentName.includes("month") ||
-    (packageDetails && packageDetails.durationDays < 360);
 
   const periodMatches = (name, durationDays) => {
     const n = (name || "").toLowerCase();
