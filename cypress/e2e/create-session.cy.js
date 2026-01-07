@@ -26,7 +26,7 @@ describe('Create Session E2E Flow', () => {
   it('should successfully create a new session as admin', () => {
     // ========== STEP 1: LOGIN AS ADMIN ==========
     cy.log('Logging in as gym admin');
-    cy.visit('/Login');
+    cy.visit('/login');
     
     // Toggle admin mode
     cy.get('#isAdmin').check();
@@ -122,7 +122,7 @@ describe('Create Session E2E Flow', () => {
   it('should show validation error when required fields are missing', () => {
     // ========== LOGIN AS ADMIN ==========
     cy.log('Logging in as gym admin for validation test');
-    cy.visit('/Login');
+    cy.visit('/login');
     
     // Toggle admin mode
     cy.get('#isAdmin').check();
@@ -156,7 +156,7 @@ describe('Create Session E2E Flow', () => {
   it('should be able to clear field values using clear buttons', () => {
     // ========== LOGIN AS ADMIN ==========
     cy.log('Logging in as gym admin for clear button test');
-    cy.visit('/Login');
+    cy.visit('/login');
     
     // Toggle admin mode
     cy.get('#isAdmin').check();
@@ -186,7 +186,7 @@ describe('Create Session E2E Flow', () => {
   it('should fail to create a session with invalid date (past date)', () => {
     // ========== STEP 1: LOGIN AS ADMIN ==========
     cy.log('Logging in as gym admin for unhappy path test');
-    cy.visit('/Login');
+    cy.visit('/login');
     
     // Toggle admin mode
     cy.get('#isAdmin').check();
@@ -248,7 +248,7 @@ describe('Create Session E2E Flow', () => {
   it('should fail to create a session with excessive capacity', () => {
     // ========== STEP 1: LOGIN AS ADMIN ==========
     cy.log('Logging in as gym admin for capacity test');
-    cy.visit('/Login');
+    cy.visit('/login');
     
     // Toggle admin mode
     cy.get('#isAdmin').check();
