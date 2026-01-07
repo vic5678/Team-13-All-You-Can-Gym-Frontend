@@ -150,10 +150,10 @@ export default function SearchComponent({
       <div style={{ flexShrink: 0 }}>
         <div style={{ padding: "20px 24px", background: "#FFFFFF", borderBottom: "1px solid #E5E5E5", display: "flex", gap: 10 }}>
           <input type="text" placeholder={placeholder} value={keyword} onChange={(e) => setKeyword(e.target.value)} onKeyPress={(e) => e.key === "Enter" && handleSearch(keyword)} style={{ flex: 1, padding: "10px 14px", border: "1px solid #DDD", borderRadius: 8, fontSize: 14, fontFamily: "Roboto" }} />
-          <button onClick={() => handleSearch(keyword)} style={{ padding: "10px 16px", background: "#B8ED44", border: "none", borderRadius: 8, cursor: "pointer" }}>
+          <button onClick={() => handleSearch(keyword)} data-cy="search-button" style={{ padding: "10px 16px", background: "#B8ED44", border: "none", borderRadius: 8, cursor: "pointer" }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="7" stroke="#42554F" strokeWidth="2" strokeLinecap="round"/><path d="M15 15L21 21" stroke="#42554F" strokeWidth="2" strokeLinecap="round"/></svg>
           </button>
-          <button onClick={() => setShowFilterMenu(!showFilterMenu)} style={{ padding: "10px 16px", background: "#42554F", border: "none", borderRadius: 8, color: "#FFFFFF", cursor: "pointer" }}>Filters</button>
+          <button onClick={() => setShowFilterMenu(!showFilterMenu)} data-cy="filter-button" style={{ padding: "10px 16px", background: "#42554F", border: "none", borderRadius: 8, color: "#FFFFFF", cursor: "pointer" }}>Filters</button>
         </div>
         {showFilterMenu && (
           <div style={{ padding: "20px 24px", background: "#FFFFFF", borderBottom: "1px solid #E5E5E5" }}>
