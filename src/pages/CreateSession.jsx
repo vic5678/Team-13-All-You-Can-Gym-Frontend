@@ -4,6 +4,46 @@ import { getGyms } from "../api/gyms";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 
+// Reusable input field component
+const InputField = ({ label, name, type = "text", placeholder, value, onChange, onClear }) => (
+  <div style={{ marginBottom: 14 }}>
+    <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
+      {label}
+    </div>
+    <div style={{ position: "relative" }}>
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        style={{
+          width: "100%",
+          padding: "10px 36px 10px 10px",
+          borderRadius: 8,
+          border: "1px solid #42554F",
+          fontSize: 13,
+          outline: "none",
+          background: "#FFFFFF",
+        }}
+      />
+      <span
+        style={{
+          position: "absolute",
+          right: 10,
+          top: 9,
+          fontSize: 16,
+          color: "#999",
+          cursor: "pointer",
+        }}
+        onClick={onClear}
+      >
+        ⓧ
+      </span>
+    </div>
+  </div>
+);
+
 export default function CreateSession() {
   const [form, setForm] = useState({
     name: "",
@@ -142,41 +182,14 @@ export default function CreateSession() {
         </div>
 
         {/* NAME */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Name
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, name: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <InputField
+          label="Name"
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, name: "" }))}
+        />
 
         {/* DATE & TIME */}
         <div style={{ marginBottom: 14 }}>
@@ -319,154 +332,45 @@ export default function CreateSession() {
         </div>
 
         {/* DESCRIPTION */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Description
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              value={form.description}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-              }}
-              onClick={() =>
-                setForm((prev) => ({ ...prev, description: "" }))
-              }
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <InputField
+          label="Description"
+          name="description"
+          placeholder="Description"
+          value={form.description}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, description: "" }))}
+        />
 
         {/* TYPE */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Type
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="type"
-              placeholder="Type"
-              value={form.type}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, type: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <InputField
+          label="Type"
+          name="type"
+          placeholder="Type"
+          value={form.type}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, type: "" }))}
+        />
 
         {/* CAPACITY */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Capacity
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="number"
-              name="capacity"
-              placeholder="Capacity"
-              value={form.capacity}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, capacity: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <InputField
+          label="Capacity"
+          name="capacity"
+          type="number"
+          placeholder="Capacity"
+          value={form.capacity}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, capacity: "" }))}
+        />
 
         {/* TRAINER */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Trainer&apos;s Name
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="trainer"
-              placeholder="Trainer's Name"
-              value={form.trainer}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, trainer: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <InputField
+          label="Trainer's Name"
+          name="trainer"
+          placeholder="Trainer's Name"
+          value={form.trainer}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, trainer: "" }))}
+        />
 
         {/* ERROR MESSAGE */}
         {error && (
