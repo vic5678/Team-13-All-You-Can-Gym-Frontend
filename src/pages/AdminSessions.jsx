@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import * as sessionApi from "../api/sessions";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function AdminSessions() {
   const { userId } = useAuth();
@@ -125,20 +126,7 @@ export default function AdminSessions() {
         </div>
 
         {/* error message */}
-        {error && (
-          <div
-            style={{
-              padding: "12px 16px",
-              background: "#FFE5E5",
-              borderRadius: 8,
-              color: "#D32F2F",
-              fontSize: 13,
-              marginBottom: 16,
-            }}
-          >
-            {error}
-          </div>
-        )}
+        <ErrorMessage error={error} />
 
         {/* loading state */}
         {loading && (
