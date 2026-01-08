@@ -6,7 +6,7 @@ import logo from '../assets/logo.svg'; // Import the logo
 
 const Header = ({ title, subtitle, userIcon = true }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { logout, userId } = useAuth();
+  const { logout } = useAuth();
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
