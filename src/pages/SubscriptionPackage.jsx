@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getSubscriptionPackageById } from "../api/subscriptions";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
+import FeatureItem from "../components/FeatureItem";
 import { FaInfinity, FaDumbbell } from "react-icons/fa";
 
 export default function Plan() {
@@ -71,100 +72,20 @@ export default function Plan() {
 
       <div style={{ padding: "20px" }}>
         {/* ===== Feature: Sessions ===== */}
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 6,
-            }}
-          >
-            <div
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: "50%",
-                background: "var(--global-accent-color-secondary)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                color: "#263B06",
-              }}
-            >
-              <FaDumbbell />
-            </div>
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 700,
-                color: "#42554F",
-              }}
-            >
-              {pkg.sessionLimit} Sessions
-              {sessionsPerWeek
-                ? ` (~${sessionsPerWeek} / week)`
-                : ""}
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: 13,
-              color: "#555",
-              lineHeight: "18px",
-            }}
-          >
-            Access any partner gym for up to {pkg.sessionLimit} sessions within
-            the {pkg.durationDays}-day period.
-          </div>
-        </div>
+        <FeatureItem
+          icon={<FaDumbbell />}
+          title={`${pkg.sessionLimit} Sessions${
+            sessionsPerWeek ? ` (~${sessionsPerWeek} / week)` : ""
+          }`}
+          description={`Access any partner gym for up to ${pkg.sessionLimit} sessions within the ${pkg.durationDays}-day period.`}
+        />
 
         {/* ===== Feature: Gyms / Description ===== */}
-        <div style={{ marginBottom: 20 }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              marginBottom: 6,
-            }}
-          >
-            <div
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: "50%",
-                background: "var(--global-accent-color-secondary)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 16,
-                color: "#263B06",
-              }}
-            >
-              <FaInfinity />
-            </div>
-            <div
-              style={{
-                fontSize: 18,
-                fontWeight: 700,
-                color: "#42554F",
-              }}
-            >
-              Unlimited Gyms
-            </div>
-          </div>
-          <div
-            style={{
-              fontSize: 13,
-              color: "#555",
-              lineHeight: "18px",
-            }}
-          >
-            {pkg.description}
-          </div>
-        </div>
+        <FeatureItem
+          icon={<FaInfinity />}
+          title="Unlimited Gyms"
+          description={pkg.description}
+        />
 
         {/* ===== IMAGE (from PremiumPlan UI) ===== */}
         <div
