@@ -7,7 +7,6 @@ import { FaPlus, FaListAlt, FaDumbbell, FaBuilding } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function AdminHome() {
-  const { user } = useAuth();
   const navigate = useNavigate();
 
   // Define admin features with icons and navigation paths

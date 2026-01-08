@@ -1,7 +1,6 @@
 import React from "react";
 // NOTE: You will need to create these API functions for sessions
 import { getAllSessions, searchSessions } from "../api/sessions";
-import { getGymById } from "../api/gyms";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import "../styles/SearchGyms.css"; // Reusing styles from SearchGyms
