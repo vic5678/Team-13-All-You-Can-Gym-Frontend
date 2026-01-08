@@ -2,18 +2,13 @@ import React, { useEffect, useState } from "react";
 import { getSubscriptionPackages } from "../api/subscriptions";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
-import { GiBiceps } from "react-icons/gi";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 export default function SubscriptionPackages() {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
-
-  const goBack = () => {
-    window.location.href = "/Dashboard";
-  };
+  const navigate = useNavigate();
 
   const handlePackageClick = (pkg) => {
     navigate(`/plan/${pkg._id}`);
