@@ -109,7 +109,6 @@ export default function SubscriptionManagement() {
   const currentName = (packageDetails?.name || "").toLowerCase();
 
   const isBasicPlan = currentName.includes("basic");
-  const isPremiumPlan = currentName.includes("premium");
 
   const isYearly =
     currentName.includes("year") ||
