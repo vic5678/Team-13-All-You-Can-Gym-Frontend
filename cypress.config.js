@@ -11,7 +11,7 @@ module.exports = defineConfig({
     screenshotOnRunFailure: true,
     screenshotsFolder: 'cypress/screenshots',
     trashAssetsBeforeRuns: true,
-    setupNodeEvents(on, config) {
+    setupNodeEvents() {
       // implement node event listeners here
     },
   },
