@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import ClearableInput from "../components/ClearableInput";
 import SessionFormFields from "../components/SessionFormFields";
+import DateTimeInput from "../components/DateTimeInput";
 
 export default function CreateSession() {
   const [form, setForm] = useState({
@@ -155,50 +156,11 @@ export default function CreateSession() {
         />
 
         {/* DATE & TIME */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Date &amp; Time
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              ref={dateTimeRef}
-              type="datetime-local"
-              name="dateTime"
-              value={form.dateTime}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                if (dateTimeRef.current) dateTimeRef.current.showPicker?.();
-                if (dateTimeRef.current) dateTimeRef.current.focus();
-              }}
-              style={{
-                position: "absolute",
-                right: 6,
-                top: 5,
-                width: 26,
-                height: 26,
-                borderRadius: "50%",
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                fontSize: 18,
-              }}
-            >
-              📅
-            </button>
-          </div>
-        </div>
+        <DateTimeInput
+          dateTimeRef={dateTimeRef}
+          value={form.dateTime}
+          onChange={handleChange}
+        />
 
         {/* GYM */}
         <div style={{ marginBottom: 14, position: "relative" }}>
