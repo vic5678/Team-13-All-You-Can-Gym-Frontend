@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
+import ClearableInput from "../components/ClearableInput";
 import * as sessionApi from "../api/sessions";
 
 export default function EditSession() {
@@ -214,42 +215,15 @@ export default function EditSession() {
             </div>
 
         {/* NAME */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Name
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-                cursor: "pointer",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, name: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <ClearableInput
+          label="Name"
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, name: "" }))}
+        />
 
         {/* DATE & TIME with picker */}
         <div style={{ marginBottom: 14 }}>
@@ -299,157 +273,49 @@ export default function EditSession() {
         </div>
 
         {/* DESCRIPTION */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Description
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="description"
-              placeholder="Description"
-              value={form.description}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-                cursor: "pointer",
-              }}
-              onClick={() =>
-                setForm((prev) => ({ ...prev, description: "" }))
-              }
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <ClearableInput
+          label="Description"
+          type="text"
+          name="description"
+          placeholder="Description"
+          value={form.description}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, description: "" }))}
+        />
 
         {/* TYPE */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Type
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="type"
-              placeholder="Type"
-              value={form.type}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-                cursor: "pointer",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, type: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <ClearableInput
+          label="Type"
+          type="text"
+          name="type"
+          placeholder="Type"
+          value={form.type}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, type: "" }))}
+        />
 
         {/* CAPACITY */}
-        <div style={{ marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Capacity
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="number"
-              name="capacity"
-              placeholder="Capacity"
-              value={form.capacity}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-                cursor: "pointer",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, capacity: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
-        </div>
+        <ClearableInput
+          label="Capacity"
+          type="number"
+          name="capacity"
+          placeholder="Capacity"
+          value={form.capacity}
+          onChange={handleChange}
+          onClear={() => setForm((prev) => ({ ...prev, capacity: "" }))}
+        />
 
         {/* TRAINER */}
         <div style={{ marginBottom: 26 }}>
-          <div style={{ fontSize: 11, color: "#999", marginBottom: 3 }}>
-            Trainer&apos;s Name
-          </div>
-          <div style={{ position: "relative" }}>
-            <input
-              type="text"
-              name="trainer"
-              placeholder="Trainer's Name"
-              value={form.trainer}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px 36px 10px 10px",
-                borderRadius: 8,
-                border: "1px solid #42554F",
-                fontSize: 13,
-                outline: "none",
-                background: "#FFFFFF",
-              }}
-            />
-            <span
-              style={{
-                position: "absolute",
-                right: 10,
-                top: 9,
-                fontSize: 16,
-                color: "#999",
-                cursor: "pointer",
-              }}
-              onClick={() => setForm((prev) => ({ ...prev, trainer: "" }))}
-            >
-              ⓧ
-            </span>
-          </div>
+          <ClearableInput
+            label="Trainer's Name"
+            type="text"
+            name="trainer"
+            placeholder="Trainer's Name"
+            value={form.trainer}
+            onChange={handleChange}
+            onClear={() => setForm((prev) => ({ ...prev, trainer: "" }))}
+          />
         </div>
 
         {/* SAVE + DELETE BUTTONS */}
