@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import ClearableInput from "../components/ClearableInput";
 import SessionFormFields from "../components/SessionFormFields";
+import ErrorMessage from "../components/ErrorMessage";
 import * as sessionApi from "../api/sessions";
 
 export default function EditSession() {
@@ -187,20 +188,7 @@ export default function EditSession() {
         )}
 
         {/* Error message */}
-        {error && (
-          <div
-            style={{
-              padding: "12px 16px",
-              background: "#FFE5E5",
-              borderRadius: 8,
-              color: "#D32F2F",
-              fontSize: 13,
-              marginBottom: 16,
-            }}
-          >
-            {error}
-          </div>
-        )}
+        <ErrorMessage error={error} />
 
         {!loading && (
           <>
