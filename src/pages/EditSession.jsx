@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import ClearableInput from "../components/ClearableInput";
+import SessionFormFields from "../components/SessionFormFields";
 import * as sessionApi from "../api/sessions";
 
 export default function EditSession() {
@@ -273,50 +274,12 @@ export default function EditSession() {
         </div>
 
         {/* DESCRIPTION */}
-        <ClearableInput
-          label="Description"
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, description: "" }))}
+        <SessionFormFields
+          form={form}
+          handleChange={handleChange}
+          setForm={setForm}
+          trainerMarginBottom={26}
         />
-
-        {/* TYPE */}
-        <ClearableInput
-          label="Type"
-          type="text"
-          name="type"
-          placeholder="Type"
-          value={form.type}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, type: "" }))}
-        />
-
-        {/* CAPACITY */}
-        <ClearableInput
-          label="Capacity"
-          type="number"
-          name="capacity"
-          placeholder="Capacity"
-          value={form.capacity}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, capacity: "" }))}
-        />
-
-        {/* TRAINER */}
-        <div style={{ marginBottom: 26 }}>
-          <ClearableInput
-            label="Trainer's Name"
-            type="text"
-            name="trainer"
-            placeholder="Trainer's Name"
-            value={form.trainer}
-            onChange={handleChange}
-            onClear={() => setForm((prev) => ({ ...prev, trainer: "" }))}
-          />
-        </div>
 
         {/* SAVE + DELETE BUTTONS */}
         <div

@@ -4,6 +4,7 @@ import { getGyms } from "../api/gyms";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 import ClearableInput from "../components/ClearableInput";
+import SessionFormFields from "../components/SessionFormFields";
 
 export default function CreateSession() {
   const [form, setForm] = useState({
@@ -294,47 +295,11 @@ export default function CreateSession() {
         </div>
 
         {/* DESCRIPTION */}
-        <ClearableInput
-          label="Description"
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, description: "" }))}
-        />
-
-        {/* TYPE */}
-        <ClearableInput
-          label="Type"
-          type="text"
-          name="type"
-          placeholder="Type"
-          value={form.type}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, type: "" }))}
-        />
-
-        {/* CAPACITY */}
-        <ClearableInput
-          label="Capacity"
-          type="number"
-          name="capacity"
-          placeholder="Capacity"
-          value={form.capacity}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, capacity: "" }))}
-        />
-
-        {/* TRAINER */}
-        <ClearableInput
-          label="Trainer's Name"
-          type="text"
-          name="trainer"
-          placeholder="Trainer's Name"
-          value={form.trainer}
-          onChange={handleChange}
-          onClear={() => setForm((prev) => ({ ...prev, trainer: "" }))}
+        <SessionFormFields
+          form={form}
+          handleChange={handleChange}
+          setForm={setForm}
+          trainerMarginBottom={14}
         />
 
         {/* ERROR MESSAGE */}
